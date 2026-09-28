@@ -44,6 +44,106 @@
       "match": [
         "RedTraffic"
       ]
+    },
+    {
+      "name": "Дикая рыбалка",
+      "group": "Познавательные",
+      "match": [
+        "Дикая рыбалка"
+      ]
+    },
+    {
+      "name": "Discovery Channel",
+      "group": "Познавательные",
+      "match": [
+        "Discovery Channel"
+      ]
+    },
+    {
+      "name": "Animal Planet",
+      "match": [
+        "Animal Planet"
+      ]
+    },
+    {
+      "name": "National Geographic",
+      "match": [
+        "National Geographic",
+        "Nat Geo"
+      ]
+    },
+    {
+      "name": "Моя Планета",
+      "match": [
+        "Моя Планета"
+      ]
+    },
+    {
+      "name": "Матч ТВ",
+      "match": [
+        "Матч ТВ"
+      ]
+    },
+    {
+      "name": "Матч! Футбол",
+      "match": [
+        "Матч! Футбол"
+      ]
+    },
+    {
+      "name": "Setanta Sports",
+      "match": [
+        "Setanta Sports 1"
+      ]
+    },
+    {
+      "name": "Setanta Sports 2",
+      "match": [
+        "Setanta Sports 2"
+      ]
+    },
+    {
+      "name": "СТС",
+      "match": [
+        "СТС"
+      ]
+    },
+    {
+      "name": "Пятница!",
+      "match": [
+        "Пятница!"
+      ]
+    },
+    {
+      "name": "2x2",
+      "match": [
+        "2x2"
+      ]
+    },
+    {
+      "name": "Bridge TV",
+      "match": [
+        "Bridge TV"
+      ]
+    },
+    {
+      "name": "Bridge Deluxe",
+      "match": [
+        "Bridge Deluxe"
+      ]
+    },
+    {
+      "name": "Россия 1",
+      "match": [
+        "Россия 1"
+      ]
+    },
+    {
+      "name": "ОРТ",
+      "match": [
+        "ОРТ",
+        "Первый"
+      ]
     }
   ]
 }
