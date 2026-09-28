@@ -44,7 +44,16 @@
   </div>
 </header>
 
-<main class="max-w-3xl mx-auto px-4 pt-4">
+<main class="max-w-3xl mx-auto px-4 pt-3">
+
+  <!-- Вкладки -->
+  <div class="flex gap-1 mb-4 border-b border-line">
+    <button data-view="channels" class="tabBtn px-4 py-2 text-sm font-medium">Каналы</button>
+    <button data-view="sources" class="tabBtn px-4 py-2 text-sm font-medium">Источники</button>
+  </div>
+
+  <!-- ================= Вкладка «Каналы» ================= -->
+  <section id="viewChannels">
 
   <!-- ============ Панель действий ============ -->
   <div class="flex flex-wrap gap-2 mb-3">
@@ -62,6 +71,25 @@
 
   <!-- Список каналов -->
   <div id="list" class="space-y-2"></div>
+  </section>
+
+  <!-- ================= Вкладка «Источники» ================= -->
+  <section id="viewSources" class="hidden">
+    <p class="text-sm text-mute mb-3">Плейлисты, в которых скрипт ищет ваши каналы. Чем выше в списке, тем приоритетнее: при одинаковых каналах побеждает верхний источник. Хранятся в <code>config.json</code>.</p>
+
+    <div id="srcNotice" class="bg-panel border border-line rounded-xl p-4 text-sm mb-3">
+      Источники ещё не загружены. Нажмите «Загрузить с GitHub» (кнопка на вкладке «Каналы»), чтобы случайно не затереть остальные настройки.
+      <div class="mt-3"><button id="srcLoad" class="btn btn-main">Загрузить с GitHub</button></div>
+    </div>
+
+    <div id="srcControls" class="hidden">
+      <div class="flex gap-2 mb-3">
+        <input id="srcNew" class="field" placeholder="https://.../playlist.m3u">
+        <button id="srcAdd" class="btn btn-main shrink-0">Добавить</button>
+      </div>
+      <div id="srcList" class="space-y-2"></div>
+    </div>
+  </section>
 </main>
 
 <!-- Кнопка «добавить» -->
@@ -124,10 +152,13 @@
       <label class="block text-sm text-mute flex-1">Ветка
         <input id="ghBranch" class="field mt-1" placeholder="main">
       </label>
-      <label class="block text-sm text-mute flex-1">Файл
+      <label class="block text-sm text-mute flex-1">Файл каналов
         <input id="ghPath" class="field mt-1" placeholder="channels.json">
       </label>
     </div>
+    <label class="block text-sm text-mute">Файл настроек и источников
+      <input id="ghCfgPath" class="field mt-1" placeholder="config.json">
+    </label>
     <label class="block text-sm text-mute">Токен доступа
       <input id="ghToken" type="password" class="field mt-1" placeholder="github_pat_...">
     </label>
@@ -155,6 +186,12 @@ let dirty = false;       // есть несохранённые изменени
 let editIndex = -1;      // индекс редактируемого канала (-1 = новый)
 let editType = 'search'; // 'search' | 'pinned'
 
+// config.json (источники). cfgLoaded защищает от перезаписи файла «пустыми» настройками
+let cfg = { sources: [] };
+let cfgSha = null;
+let cfgDirty = false;
+let cfgLoaded = false;
+
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const toList = v => v == null || v === '' ? [] : (Array.isArray(v) ? v : [v]);
@@ -170,11 +207,10 @@ function toast(text) {
   toastTimer = setTimeout(() => t.classList.add('hidden'), 3500);
 }
 
-function markDirty(v = true) {
-  dirty = v;
-  $('dirty').classList.toggle('hidden', !v);
-}
-window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+function refreshDirty() { $('dirty').classList.toggle('hidden', !(dirty || cfgDirty)); }
+function markDirty(v = true) { dirty = v; refreshDirty(); }
+function markCfgDirty(v = true) { cfgDirty = v; refreshDirty(); }
+window.addEventListener('beforeunload', e => { if (dirty || cfgDirty) { e.preventDefault(); e.returnValue = ''; } });
 
 /* =====================================================================
    Отрисовка списка
@@ -375,48 +411,156 @@ const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/
 function ghReady() {
   const c = gh();
   if (!c.repo || !c.token) { toast('Сначала введите репозиторий и токен в «GitHub»'); openGh(); return null; }
+  const api = p => `https://api.github.com/repos/${c.repo}/contents/${p}`;
   return {
-    url: `https://api.github.com/repos/${c.repo}/contents/${c.path || 'channels.json'}`,
     branch: c.branch || 'main',
+    chUrl: api(c.path || 'channels.json'),
+    cfgUrl: api(c.cfgPath || 'config.json'),
     headers: { Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github+json' }
   };
 }
 
-$('btnLoad').addEventListener('click', async () => {
+// Читает файл из репозитория. Возвращает {text, sha} или null, если файла нет
+async function ghRead(g, url) {
+  const r = await fetch(`${url}?ref=${g.branch}`, { headers: g.headers, cache: 'no-store' });
+  if (r.status === 404) return null;
+  if (r.status === 401) throw new Error('неверный токен');
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const d = await r.json();
+  return { text: b64dec(d.content), sha: d.sha };
+}
+
+// Записывает JSON-файл (коммит в репозиторий). Возвращает новый sha
+async function ghWrite(g, url, obj, sha, message) {
+  const body = {
+    message,
+    content: b64enc(JSON.stringify(obj, null, 2) + '\n'),
+    branch: g.branch,
+    ...(sha ? { sha } : {})
+  };
+  const r = await fetch(url, { method: 'PUT', headers: { ...g.headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (r.status === 409 || r.status === 422) throw new Error('файл на GitHub изменился — нажмите «Загрузить с GitHub»');
+  if (r.status === 401 || r.status === 403 || r.status === 404) throw new Error('нет доступа: проверьте токен и права Contents: Read and write');
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return (await r.json()).content.sha;
+}
+
+async function loadFromGithub() {
   const g = ghReady(); if (!g) return;
-  if (dirty && !confirm('Есть несохранённые изменения. Загрузить версию с GitHub поверх них?')) return;
+  if ((dirty || cfgDirty) && !confirm('Есть несохранённые изменения. Загрузить версию с GitHub поверх них?')) return;
   try {
-    const r = await fetch(`${g.url}?ref=${g.branch}`, { headers: g.headers, cache: 'no-store' });
-    if (!r.ok) throw new Error(r.status === 404 ? 'файл не найден' : r.status === 401 ? 'неверный токен' : 'HTTP ' + r.status);
-    const data = await r.json();
-    loadDoc(b64dec(data.content));
-    fileSha = data.sha;
+    const ch = await ghRead(g, g.chUrl);
+    if (!ch) throw new Error('файл каналов не найден в репозитории');
+    loadDoc(ch.text);
+    fileSha = ch.sha;
+
+    const cf = await ghRead(g, g.cfgUrl);
+    if (!cf) throw new Error('файл настроек не найден в репозитории');
+    cfg = JSON.parse(cf.text);
+    if (!Array.isArray(cfg.sources)) cfg.sources = [];
+    cfgSha = cf.sha; cfgLoaded = true;
+    markCfgDirty(false); renderSources();
     toast('Загружено с GitHub');
   } catch (err) { toast('Не удалось загрузить: ' + err.message); }
-});
+}
+$('btnLoad').addEventListener('click', loadFromGithub);
+$('srcLoad').addEventListener('click', loadFromGithub);
 
 $('btnSave').addEventListener('click', async () => {
   const g = ghReady(); if (!g) return;
+  if (!dirty && !cfgDirty) return toast('Нет изменений для сохранения');
   try {
-    // если sha неизвестен (файл открыт с устройства) — берём актуальный, чтобы перезаписать файл
-    if (!fileSha) {
-      const r0 = await fetch(`${g.url}?ref=${g.branch}`, { headers: g.headers, cache: 'no-store' });
-      if (r0.ok) fileSha = (await r0.json()).sha;
+    if (dirty) {
+      // если sha неизвестен (файл открыт с устройства) — берём актуальный, чтобы перезаписать файл
+      if (!fileSha) { const cur = await ghRead(g, g.chUrl); if (cur) fileSha = cur.sha; }
+      fileSha = await ghWrite(g, g.chUrl, doc, fileSha, 'chore: update channels via editor');
+      markDirty(false);
     }
-    const body = {
-      message: 'chore: update channels via editor',
-      content: b64enc(JSON.stringify(doc, null, 2) + '\n'),
-      branch: g.branch,
-      ...(fileSha ? { sha: fileSha } : {})
-    };
-    const r = await fetch(g.url, { method: 'PUT', headers: { ...g.headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    if (r.status === 409 || r.status === 422) throw new Error('файл на GitHub изменился — нажмите «Загрузить с GitHub»');
-    if (r.status === 401 || r.status === 403 || r.status === 404) throw new Error('нет доступа: проверьте токен и права Contents: Read and write');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    fileSha = (await r.json()).content.sha;
-    markDirty(false);
+    if (cfgDirty) {
+      if (!cfgLoaded) throw new Error('сначала загрузите настройки с GitHub');
+      cfgSha = await ghWrite(g, g.cfgUrl, cfg, cfgSha, 'chore: update sources via editor');
+      markCfgDirty(false);
+    }
     toast('Сохранено. Плейлист обновится через минуту-две');
   } catch (err) { toast('Не удалось сохранить: ' + err.message); }
+});
+
+/* =====================================================================
+   Вкладки и список источников
+   ===================================================================== */
+function setView(v) {
+  $('viewChannels').classList.toggle('hidden', v !== 'channels');
+  $('viewSources').classList.toggle('hidden', v !== 'sources');
+  $('btnAdd').classList.toggle('hidden', v !== 'channels');
+  document.querySelectorAll('.tabBtn').forEach(b => {
+    const on = b.dataset.view === v;
+    b.style.color = on ? '#f2b544' : '#8b93a7';
+    b.style.boxShadow = on ? 'inset 0 -2px 0 #f2b544' : 'none';
+  });
+}
+document.querySelectorAll('.tabBtn').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+function renderSources() {
+  $('srcNotice').classList.toggle('hidden', cfgLoaded);
+  $('srcControls').classList.toggle('hidden', !cfgLoaded);
+  if (!cfgLoaded) return;
+  $('srcList').innerHTML = cfg.sources.length ? cfg.sources.map((u, i) => `
+    <div class="bg-panel border border-line rounded-xl p-3" data-i="${i}">
+      <button data-act="edit" class="block w-full text-left text-sm break-all">${esc(u)}</button>
+      <div class="flex items-center gap-1 mt-2">
+        <span class="srcInfo text-xs text-mute flex-1"></span>
+        <button data-act="check" class="btn" style="padding:6px 10px">Проверить</button>
+        <button data-act="up" class="icon" title="Выше">▲</button>
+        <button data-act="down" class="icon" title="Ниже">▼</button>
+        <button data-act="del" class="icon" title="Удалить">✕</button>
+      </div>
+    </div>`).join('') :
+    '<div class="text-center text-mute py-8">Источников нет. Добавьте ссылку на .m3u или .m3u8 выше.</div>';
+}
+
+$('srcAdd').addEventListener('click', () => {
+  const url = $('srcNew').value.trim();
+  if (!/^https?:\/\//i.test(url)) return toast('Ссылка должна начинаться с http:// или https://');
+  if (cfg.sources.includes(url)) return toast('Такой источник уже есть');
+  cfg.sources.push(url);
+  $('srcNew').value = '';
+  markCfgDirty(); renderSources();
+});
+
+$('srcList').addEventListener('click', async ev => {
+  const btn = ev.target.closest('[data-act]'); if (!btn) return;
+  const card = btn.closest('[data-i]');
+  const i = +card.dataset.i, act = btn.dataset.act, s = cfg.sources;
+
+  if (act === 'up' || act === 'down') {
+    const j = act === 'up' ? i - 1 : i + 1;
+    if (j < 0 || j >= s.length) return;
+    [s[i], s[j]] = [s[j], s[i]];
+    markCfgDirty(); renderSources();
+  }
+  if (act === 'del' && confirm('Удалить этот источник?')) {
+    s.splice(i, 1); markCfgDirty(); renderSources();
+  }
+  if (act === 'edit') {
+    const v = (prompt('Ссылка на плейлист', s[i]) || '').trim();
+    if (v && v !== s[i]) {
+      if (!/^https?:\/\//i.test(v)) return toast('Ссылка должна начинаться с http:// или https://');
+      s[i] = v; markCfgDirty(); renderSources();
+    }
+  }
+  if (act === 'check') {
+    // Быстрая проверка из браузера: скачиваем плейлист и считаем каналы
+    const info = card.querySelector('.srcInfo');
+    info.textContent = 'Проверяю...';
+    try {
+      const r = await fetch(s[i]);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const n = ((await r.text()).match(/^#EXTINF/gm) || []).length;
+      info.textContent = n ? `Доступен, каналов: ${n}` : 'Ответ получен, но каналов не видно';
+    } catch (e) {
+      info.textContent = 'Не удалось проверить отсюда (сервер может блокировать запросы из браузера)';
+    }
+  }
 });
 
 /* ---------- Окно настроек GitHub ---------- */
@@ -425,6 +569,7 @@ function openGh() {
   $('ghRepo').value = c.repo || '';
   $('ghBranch').value = c.branch || 'main';
   $('ghPath').value = c.path || 'channels.json';
+  $('ghCfgPath').value = c.cfgPath || 'config.json';
   $('ghToken').value = c.token || '';
   $('ghModal').classList.remove('hidden');
 }
@@ -435,6 +580,7 @@ $('ghOk').addEventListener('click', () => {
     repo: $('ghRepo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''),
     branch: $('ghBranch').value.trim() || 'main',
     path: $('ghPath').value.trim() || 'channels.json',
+    cfgPath: $('ghCfgPath').value.trim() || 'config.json',
     token: $('ghToken').value.trim()
   }));
   $('ghModal').classList.add('hidden');
@@ -443,6 +589,8 @@ $('ghOk').addEventListener('click', () => {
 
 /* ---------- Старт ---------- */
 render();
+renderSources();
+setView('channels');
 </script>
 </body>
 </html>
