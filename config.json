@@ -1,0 +1,27 @@
+{
+  "sources": [
+    "https://iptv-org.github.io/iptv/languages/rus.m3u",
+    "https://iptv-org.github.io/iptv/languages/ukr.m3u"
+  ],
+
+  "output": "playlist.m3u",
+
+  "check": {
+    "enabled": true,
+    "timeout": 4,
+    "concurrency": 100,
+    "retries": 1,
+    "strict_hls": true,
+    "keep_non_http": true,
+    "user_agent": "Mozilla/5.0 (compatible; IPTV-Updater/1.0)"
+  },
+
+  "filters": {
+    "include_groups": [],
+    "exclude_groups": ["xxx", "adult", "18+"],
+    "exclude_names": []
+  },
+
+  "sort_by_group": false,
+  "min_channels": 10
+}

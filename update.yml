@@ -1,0 +1,55 @@
+name: Update IPTV playlist
+
+on:
+  # Раз в сутки в 03:00 UTC (cron в GitHub всегда работает по UTC)
+  schedule:
+    - cron: "0 3 * * *"
+  # Ручной запуск кнопкой "Run workflow" во вкладке Actions
+  workflow_dispatch:
+  # Автозапуск при изменении конфига или скрипта
+  push:
+    paths:
+      - "config.json"
+      - "update_playlist.py"
+
+# Разрешаем workflow коммитить в репозиторий (без этого push упадёт с 403)
+permissions:
+  contents: write
+
+# Не запускать два обновления одновременно
+concurrency:
+  group: update-playlist
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build playlist
+        run: python update_playlist.py config.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add playlist.m3u
+          if git diff --cached --quiet; then
+            echo "Изменений нет — коммит не нужен."
+          else
+            git commit -m "chore: update playlist ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+            git push
+          fi
