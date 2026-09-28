@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-IPTV playlist updater.
+IPTV playlist updater — режим «мои каналы».
 
-Что делает:
-  1. Скачивает m3u/m3u8 плейлисты из config.json -> "sources".
-  2. Парсит их, сохраняя ВСЕ атрибуты #EXTINF (tvg-id, tvg-name, tvg-logo, group-title и любые другие)
-     и дополнительные строки (#EXTVLCOPT, #KODIPROP и т.п.).
-  3. Фильтрует по group-title / названию.
-  4. Убирает дубликаты по названию (и по одинаковым URL).
-     Для каждого названия берётся ПЕРВЫЙ РАБОТАЮЩИЙ вариант потока.
-  5. Асинхронно проверяет потоки (таймаут из конфига).
-  6. Записывает результат в playlist.m3u.
+Вы описываете нужные каналы в channels.json. Для каждого канала скрипт:
+  * если указан "url"  -> берёт вашу жёсткую ссылку (можно несколько — как запасные);
+  * если "url" нет     -> ищет канал по названию в плейлистах-источниках (config.json -> sources),
+                          проверяет потоки и берёт первый рабочий.
+Итоговый playlist.m3u содержит ТОЛЬКО ваши каналы, в том порядке, как они записаны в channels.json.
+
+Если для канала не нашлось рабочего потока, остаётся ссылка из предыдущей версии playlist.m3u
+(чтобы канал не пропадал из-за временного сбоя источника).
 
 Запуск:  python update_playlist.py [путь_к_config.json]
 """
@@ -30,6 +29,8 @@ import aiohttp
 
 # Ищет пары ключ="значение" внутри строки #EXTINF
 ATTR_RE = re.compile(r'([\w\-]+)="([^"]*)"')
+# Пометки качества, которые игнорируются при точном сравнении названий
+QUALITY_RE = re.compile(r"\b(hd|sd|fhd|uhd|4k)\b", re.IGNORECASE)
 
 
 # --------------------------------------------------------------------------- #
@@ -37,29 +38,48 @@ ATTR_RE = re.compile(r'([\w\-]+)="([^"]*)"')
 # --------------------------------------------------------------------------- #
 @dataclass
 class Channel:
-    name: str                                   # отображаемое имя (после запятой в #EXTINF)
-    url: str                                    # ссылка на поток
+    name: str
+    url: str
     attrs: "OrderedDict[str, str]" = field(default_factory=OrderedDict)  # tvg-id, tvg-logo, ...
-    extra: list = field(default_factory=list)   # доп. строки между #EXTINF и URL
-
-    @property
-    def group(self) -> str:
-        return self.attrs.get("group-title", "")
-
-    @property
-    def key(self) -> str:
-        """Ключ для поиска дубликатов: имя без регистра и лишних пробелов."""
-        return re.sub(r"\s+", " ", self.name).strip().casefold()
+    extra: list = field(default_factory=list)  # доп. строки (#EXTVLCOPT и т.п.)
 
 
 # --------------------------------------------------------------------------- #
-#  Парсинг M3U
+#  Сравнение названий
+# --------------------------------------------------------------------------- #
+def squash(text: str, drop_quality: bool = False) -> str:
+    """'Муз-ТВ HD' -> 'музтв' (при drop_quality=True). Убирает регистр, пробелы, знаки, 'ё'->'е'."""
+    text = text.casefold().replace("ё", "е")
+    if drop_quality:
+        text = QUALITY_RE.sub("", text)
+    return re.sub(r"[\W_]+", "", text)
+
+
+def name_matches(name: str, patterns: list[str]) -> bool:
+    """
+    'ТНТ'  — название СОДЕРЖИТ это (найдёт и 'ТНТ4').
+    '=ТНТ' — название ТОЧНО равно (игнорируя регистр, пробелы, дефисы, HD/SD).
+    """
+    for p in patterns:
+        if p.startswith("="):
+            if squash(name, True) == squash(p[1:], True):
+                return True
+        elif squash(p) in squash(name):
+            return True
+    return False
+
+
+def as_list(value) -> list:
+    if value is None or value == "":
+        return []
+    return value if isinstance(value, list) else [value]
+
+
+# --------------------------------------------------------------------------- #
+#  Парсинг / запись M3U
 # --------------------------------------------------------------------------- #
 def split_extinf(line: str) -> tuple[str, str]:
-    """
-    Делит '#EXTINF:-1 a="x, y" b="z",Имя' на (часть_с_атрибутами, имя).
-    Запятая-разделитель — первая запятая ВНЕ кавычек (в group-title запятые бывают).
-    """
+    """Делит '#EXTINF:-1 a="x, y",Имя' по первой запятой ВНЕ кавычек."""
     in_quotes = False
     for i, ch in enumerate(line):
         if ch == '"':
@@ -73,51 +93,39 @@ def parse_m3u(text: str) -> tuple[str, list[Channel]]:
     """Возвращает (строка_заголовка #EXTM3U, список каналов)."""
     header = "#EXTM3U"
     channels: list[Channel] = []
-
-    pending: Channel | None = None   # канал, для которого ждём строку с URL
-    pending_group: str | None = None  # значение из #EXTGRP
+    pending: Channel | None = None
+    pending_group: str | None = None
 
     for raw in text.splitlines():
         line = raw.strip().lstrip("\ufeff")
         if not line:
             continue
-
         if line.upper().startswith("#EXTM3U"):
-            header = line  # сохраняем, например, url-tvg="..." / x-tvg-url="..."
+            header = line
             continue
-
         if line.startswith("#EXTINF"):
             head, name = split_extinf(line)
             attrs = OrderedDict(ATTR_RE.findall(head))
-            # если имени после запятой нет — берём tvg-name
-            name = name or attrs.get("tvg-name", "") or "Unnamed"
-            pending = Channel(name=name, url="", attrs=attrs)
+            pending = Channel(name=name or attrs.get("tvg-name", "") or "Unnamed", url="", attrs=attrs)
             pending_group = None
             continue
-
         if line.startswith("#EXTGRP:"):
             pending_group = line.split(":", 1)[1].strip()
             continue
-
         if line.startswith("#"):
-            # прочие директивы (#EXTVLCOPT, #KODIPROP...) — сохраняем как есть
             if pending is not None:
                 pending.extra.append(line)
             continue
-
-        # Иначе это строка с URL
-        if pending is not None:
+        if pending is not None:  # строка с URL
             pending.url = line
             if pending_group and not pending.attrs.get("group-title"):
                 pending.attrs["group-title"] = pending_group
             channels.append(pending)
             pending = None
-
     return header, channels
 
 
 def channel_to_m3u(ch: Channel) -> str:
-    """Собирает канал обратно в текст M3U, сохраняя порядок атрибутов."""
     attrs = " ".join(f'{k}="{v.replace(chr(34), chr(39))}"' for k, v in ch.attrs.items())
     lines = [f"#EXTINF:-1 {attrs},{ch.name}" if attrs else f"#EXTINF:-1,{ch.name}"]
     lines.extend(ch.extra)
@@ -126,81 +134,22 @@ def channel_to_m3u(ch: Channel) -> str:
 
 
 # --------------------------------------------------------------------------- #
-#  Загрузка источников
+#  Сеть
 # --------------------------------------------------------------------------- #
 async def fetch_source(session: aiohttp.ClientSession, url: str) -> str | None:
     try:
         async with session.get(url, timeout=aiohttp.ClientTimeout(total=60)) as resp:
             resp.raise_for_status()
             return await resp.text(errors="replace")
-    except Exception as exc:  # один упавший источник не должен ломать весь процесс
+    except Exception as exc:
         print(f"  ! Не удалось скачать {url}: {exc}")
         return None
 
 
-# --------------------------------------------------------------------------- #
-#  Фильтры
-# --------------------------------------------------------------------------- #
-QUALITY_RE = re.compile(r"\b(hd|sd|fhd|uhd|4k)\b", re.IGNORECASE)
-
-
-def squash(text: str, drop_quality: bool = False) -> str:
-    """
-    Приводит название к виду для сравнения: 'Муз-ТВ HD' -> 'музтв' (drop_quality=True)
-    Убираются регистр, пробелы, дефисы, знаки, 'ё' заменяется на 'е'.
-    """
-    text = text.casefold().replace("ё", "е")
-    if drop_quality:
-        text = QUALITY_RE.sub("", text)
-    return re.sub(r"[\W_]+", "", text)
-
-
-def matches_whitelist(name: str, patterns: list[str]) -> bool:
-    """
-    Шаблон 'ТНТ'  — название СОДЕРЖИТ это слово (найдёт и 'ТНТ4', 'ТНТ Music').
-    Шаблон '=ТНТ' — название ТОЧНО равно (игнорируя регистр, пробелы, дефисы, HD/SD).
-    """
-    for p in patterns:
-        if p.startswith("="):
-            if squash(name, True) == squash(p[1:], True):
-                return True
-        elif squash(p) in squash(name):
-            return True
-    return False
-
-
-def passes_filters(ch: Channel, flt: dict) -> bool:
-    group = ch.group.casefold()
-    name = ch.name.casefold()
-
-    # Белый список по названию: если задан — остаются ТОЛЬКО эти каналы
-    whitelist = flt.get("include_names", [])
-    if whitelist and not matches_whitelist(ch.name, whitelist):
-        return False
-
-    include = [g.casefold() for g in flt.get("include_groups", [])]
-    exclude = [g.casefold() for g in flt.get("exclude_groups", [])]
-    bad_names = [n.casefold() for n in flt.get("exclude_names", [])]
-
-    if include and not any(g in group for g in include):
-        return False
-    if any(g in group for g in exclude):
-        return False
-    if any(n in name for n in bad_names):
-        return False
-    return True
-
-
-# --------------------------------------------------------------------------- #
-#  Проверка потоков
-# --------------------------------------------------------------------------- #
 async def is_alive(session: aiohttp.ClientSession, url: str, cfg: dict) -> bool:
-    """
-    Проверка одного потока. HEAD многие IPTV-серверы не поддерживают,
-    поэтому делаем GET и читаем только первые байты (поток целиком не качаем).
-    """
+    """GET + чтение первых байт (HEAD многие IPTV-серверы не поддерживают)."""
     if not url.lower().startswith(("http://", "https://")):
-        return cfg.get("keep_non_http", True)  # rtmp://, udp:// и т.д. проверить нельзя
+        return cfg.get("keep_non_http", True)  # rtmp://, udp:// проверить нельзя
 
     is_hls = ".m3u8" in url.lower()
     timeout = aiohttp.ClientTimeout(total=cfg.get("timeout", 4))
@@ -214,10 +163,8 @@ async def is_alive(session: aiohttp.ClientSession, url: str, cfg: dict) -> bool:
                 chunk = await resp.content.read(2048)
                 if not chunk:
                     continue
-                # "мягкие" ошибки: сервер отдаёт 200, но это HTML-страница
-                if "text/html" in ctype and not is_hls:
+                if "text/html" in ctype and not is_hls:  # «мягкая» ошибка: 200, но страница
                     continue
-                # HLS-плейлист должен начинаться с #EXTM3U
                 if is_hls and cfg.get("strict_hls", True) and b"#EXTM3U" not in chunk:
                     continue
                 return True
@@ -226,25 +173,55 @@ async def is_alive(session: aiohttp.ClientSession, url: str, cfg: dict) -> bool:
     return False
 
 
-async def pick_alive(
-    candidates: list[Channel],
-    session: aiohttp.ClientSession,
-    sem: asyncio.Semaphore,
-    cfg: dict,
-    progress: dict,
-) -> Channel | None:
-    """Из вариантов одного канала возвращает первый рабочий (по порядку источников)."""
-    result = None
-    for ch in candidates:
+# --------------------------------------------------------------------------- #
+#  Разрешение записей из channels.json
+# --------------------------------------------------------------------------- #
+def build_channel(entry: dict, url: str, src: Channel | None = None) -> Channel:
+    """Собирает итоговый канал: атрибуты найденного источника + ваши переопределения."""
+    attrs: "OrderedDict[str, str]" = OrderedDict(src.attrs) if src else OrderedDict()
+    overrides = {
+        "tvg-id": entry.get("tvg_id"),
+        "tvg-name": entry.get("tvg_name"),
+        "tvg-logo": entry.get("logo"),
+        "group-title": entry.get("group"),
+    }
+    for key, value in overrides.items():
+        if value:
+            attrs[key] = value
+    if not src:
+        attrs.setdefault("tvg-name", entry["name"])
+    extra = (list(src.extra) if src else []) + as_list(entry.get("extra"))
+    return Channel(name=entry["name"], url=url, attrs=attrs, extra=list(dict.fromkeys(extra)))
+
+
+async def resolve_pinned(entry, session, sem, check_cfg) -> tuple[str, bool]:
+    """Жёсткая ссылка: берём первую живую из списка; если все мертвы — всё равно первую."""
+    urls = as_list(entry["url"])
+    if not check_cfg.get("enabled", True):
+        return urls[0], True
+    for url in urls:
         async with sem:
-            ok = await is_alive(session, ch.url, cfg)
-        if ok:
-            result = ch
-            break
-    progress["done"] += 1
-    if progress["done"] % 250 == 0:
-        print(f"  ... проверено {progress['done']}/{progress['total']}")
-    return result
+            if await is_alive(session, url, check_cfg):
+                return url, True
+    return urls[0], False
+
+
+async def resolve_search(entry, pool, session, sem, check_cfg) -> tuple[Channel | None, int]:
+    """Ищет канал по названию в пуле источников, возвращает первый рабочий вариант."""
+    patterns = as_list(entry.get("match")) or ["=" + entry["name"]]
+    candidates = [c for c in pool if name_matches(c.name, patterns)]
+    # точное совпадение названия — вперёд (сортировка стабильная, порядок источников сохраняется)
+    target = squash(entry["name"], True)
+    candidates.sort(key=lambda c: squash(c.name, True) != target)
+    candidates = candidates[: check_cfg.get("max_candidates", 8)]
+
+    for cand in candidates:
+        if not check_cfg.get("enabled", True):
+            return cand, len(candidates)
+        async with sem:
+            if await is_alive(session, cand.url, check_cfg):
+                return cand, len(candidates)
+    return None, len(candidates)
 
 
 # --------------------------------------------------------------------------- #
@@ -254,80 +231,84 @@ async def main(config_path: str) -> int:
     started = time.time()
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     check_cfg = cfg.get("check", {})
-    headers = {"User-Agent": check_cfg.get("user_agent", "Mozilla/5.0")}
 
-    # ssl=False: у многих IPTV-серверов кривые/просроченные сертификаты
+    entries = json.loads(Path(cfg.get("channels_file", "channels.json")).read_text(encoding="utf-8"))["channels"]
+    out_path = Path(cfg.get("output", "playlist.m3u"))
+
+    # Прошлая версия плейлиста — запасной вариант, если свежий поток не найден
+    previous: dict[str, Channel] = {}
+    if out_path.exists():
+        _, prev_channels = parse_m3u(out_path.read_text(encoding="utf-8"))
+        previous = {squash(c.name): c for c in prev_channels}
+
+    headers = {"User-Agent": check_cfg.get("user_agent", "Mozilla/5.0")}
     connector = aiohttp.TCPConnector(limit=check_cfg.get("concurrency", 100), ssl=False)
 
     async with aiohttp.ClientSession(headers=headers, connector=connector) as session:
-        # 1. Скачиваем источники параллельно
-        print(f"[1/4] Скачивание источников ({len(cfg['sources'])})...")
-        texts = await asyncio.gather(*(fetch_source(session, u) for u in cfg["sources"]))
-
-        all_channels: list[Channel] = []
+        # 1. Источники нужны, только если есть каналы без жёсткой ссылки
+        pool: list[Channel] = []
         out_header = "#EXTM3U"
-        for url, text in zip(cfg["sources"], texts):
-            if not text:
-                continue
-            header, chans = parse_m3u(text)
-            print(f"  + {url}: {len(chans)} каналов")
-            all_channels.extend(chans)
-            # берём заголовок с EPG (url-tvg / x-tvg-url) от первого источника, где он есть
-            if out_header == "#EXTM3U" and header.strip() != "#EXTM3U":
-                out_header = header
+        if any(not e.get("url") for e in entries):
+            print(f"[1/3] Скачивание источников ({len(cfg['sources'])})...")
+            texts = await asyncio.gather(*(fetch_source(session, u) for u in cfg["sources"]))
+            seen_urls: set[str] = set()
+            for url, text in zip(cfg["sources"], texts):
+                if not text:
+                    continue
+                header, chans = parse_m3u(text)
+                print(f"  + {url}: {len(chans)} каналов")
+                for ch in chans:
+                    if ch.url and ch.url not in seen_urls:
+                        seen_urls.add(ch.url)
+                        pool.append(ch)
+                if out_header == "#EXTM3U" and header.strip() != "#EXTM3U":
+                    out_header = header  # заголовок с EPG от первого источника, где он есть
+        if cfg.get("epg_url"):
+            out_header = f'#EXTM3U url-tvg="{cfg["epg_url"]}"'
 
-        total_raw = len(all_channels)
+        # 2. Разрешаем все записи параллельно (порядок результата = порядок в channels.json)
+        print(f"[2/3] Поиск и проверка потоков для {len(entries)} каналов...")
+        sem = asyncio.Semaphore(check_cfg.get("concurrency", 100))
 
-        # 2. Фильтры + удаление дублей по URL
-        print("[2/4] Фильтрация...")
-        seen_urls: set[str] = set()
-        filtered: list[Channel] = []
-        for ch in all_channels:
-            if not ch.url or ch.url in seen_urls:
-                continue
-            if not passes_filters(ch, cfg.get("filters", {})):
-                continue
-            seen_urls.add(ch.url)
-            filtered.append(ch)
+        async def handle(entry: dict) -> tuple[Channel | None, str]:
+            if entry.get("url"):
+                url, alive = await resolve_pinned(entry, session, sem, check_cfg)
+                return build_channel(entry, url), ("ok" if alive else "pinned_dead")
+            src, n = await resolve_search(entry, pool, session, sem, check_cfg)
+            if src:
+                return build_channel(entry, src.url, src), "ok"
+            old = previous.get(squash(entry["name"]))
+            if old:
+                return build_channel(entry, old.url, old), "kept_old"
+            return None, ("not_found" if n == 0 else "all_dead")
 
-        # 3. Группируем по названию (дубликаты) — порядок появления сохраняется
-        groups: "OrderedDict[str, list[Channel]]" = OrderedDict()
-        for ch in filtered:
-            groups.setdefault(ch.key, []).append(ch)
-        print(f"  После фильтров: {len(filtered)} потоков, уникальных названий: {len(groups)}")
+        results = await asyncio.gather(*(handle(e) for e in entries))
 
-        # 4. Проверка доступности
-        if check_cfg.get("enabled", True):
-            print(f"[3/4] Проверка потоков (таймаут {check_cfg.get('timeout', 4)} c)...")
-            sem = asyncio.Semaphore(check_cfg.get("concurrency", 100))
-            progress = {"done": 0, "total": len(groups)}
-            picked = await asyncio.gather(
-                *(pick_alive(c, session, sem, check_cfg, progress) for c in groups.values())
-            )
-            result = [ch for ch in picked if ch is not None]
-        else:
-            print("[3/4] Проверка отключена — берём первый вариант каждого канала")
-            result = [c[0] for c in groups.values()]
+    # 3. Отчёт и запись
+    labels = {
+        "ok": "OK",
+        "pinned_dead": "ВНИМАНИЕ: ваша ссылка не отвечает (оставлена как есть)",
+        "kept_old": "ВНИМАНИЕ: свежий поток не найден, оставлена ссылка из прошлого плейлиста",
+        "not_found": "НЕ НАЙДЕН в источниках (проверьте название или добавьте источник)",
+        "all_dead": "НАЙДЕН, но все потоки не отвечают",
+    }
+    result: list[Channel] = []
+    problems = 0
+    for entry, (channel, status) in zip(entries, results):
+        print(f"  [{labels[status]}] {entry['name']}")
+        if status != "ok":
+            problems += 1
+        if channel:
+            result.append(channel)
 
-    # Сортировка по группам (по желанию)
-    if cfg.get("sort_by_group"):
-        result.sort(key=lambda c: (c.group.casefold(), c.name.casefold()))
-
-    # Защита: если почти всё "умерло" (например, упала сеть) — не затираем старый плейлист
-    if len(result) < cfg.get("min_channels", 1):
-        print(f"! Итог слишком мал ({len(result)} < min_channels). Файл НЕ перезаписан.")
+    if not result:
+        print("! Итоговый плейлист пуст. Файл НЕ перезаписан.")
         return 1
 
-    # 5. Запись
-    print("[4/4] Запись файла...")
-    out_path = Path(cfg.get("output", "playlist.m3u"))
-    body = "\n".join(channel_to_m3u(ch) for ch in result)
+    print("[3/3] Запись файла...")
+    body = "\n".join(channel_to_m3u(c) for c in result)
     out_path.write_text(f"{out_header}\n{body}\n", encoding="utf-8")
-
-    print(
-        f"Готово: {len(result)} рабочих каналов из {total_raw} исходных "
-        f"-> {out_path} ({time.time() - started:.0f} c)"
-    )
+    print(f"Готово: {len(result)}/{len(entries)} каналов, проблем: {problems} -> {out_path} ({time.time() - started:.0f} c)")
     return 0
 
 
