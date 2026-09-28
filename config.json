@@ -17,6 +17,7 @@
   },
 
   "filters": {
+    "include_names": ["=Муз ТВ", "Рыбалка и охота", "=ТНТ"],
     "include_groups": [],
     "exclude_groups": ["xxx", "adult", "18+"],
     "exclude_names": []
