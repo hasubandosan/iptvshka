@@ -11,3 +11,5 @@ https://tsv.md/stream/hls/tsv-online/index.m3u8
 #EXTINF:-1 tvg-id="rentv" tvg-logo="http://epg.it999.ru/img2/18.png" group-title="WINK+Aрхив",Локо
 #EXTVLCOPT:http-user-agent=Mozilla 5.0
 https://zabava-htlive.cdn.ngenix.net/hls/CH_RENTV/variant.m3u8
+#EXTINF:-1 tvg-logo="https://i.ibb.co/mXsbRw6/redtraffic-1.png" group-title="Adults",RedTraffic
+http://live.redtraffic.xyz/bigass.m3u8?fluxuslust.m3u8
