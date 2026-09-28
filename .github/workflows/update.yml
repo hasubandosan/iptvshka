@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - "config.json"
+      - "channels.json"
       - "update_playlist.py"
 
 # Разрешаем workflow коммитить в репозиторий (без этого push упадёт с 403)
