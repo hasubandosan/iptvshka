@@ -28,6 +28,10 @@
       "match": [
         "Рен ТВ"
       ]
+    },
+    {
+      "name": "Hustler",
+      "group": "Adults"
     }
   ]
 }
