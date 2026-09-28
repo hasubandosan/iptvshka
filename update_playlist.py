@@ -141,9 +141,42 @@ async def fetch_source(session: aiohttp.ClientSession, url: str) -> str | None:
 # --------------------------------------------------------------------------- #
 #  Фильтры
 # --------------------------------------------------------------------------- #
+QUALITY_RE = re.compile(r"\b(hd|sd|fhd|uhd|4k)\b", re.IGNORECASE)
+
+
+def squash(text: str, drop_quality: bool = False) -> str:
+    """
+    Приводит название к виду для сравнения: 'Муз-ТВ HD' -> 'музтв' (drop_quality=True)
+    Убираются регистр, пробелы, дефисы, знаки, 'ё' заменяется на 'е'.
+    """
+    text = text.casefold().replace("ё", "е")
+    if drop_quality:
+        text = QUALITY_RE.sub("", text)
+    return re.sub(r"[\W_]+", "", text)
+
+
+def matches_whitelist(name: str, patterns: list[str]) -> bool:
+    """
+    Шаблон 'ТНТ'  — название СОДЕРЖИТ это слово (найдёт и 'ТНТ4', 'ТНТ Music').
+    Шаблон '=ТНТ' — название ТОЧНО равно (игнорируя регистр, пробелы, дефисы, HD/SD).
+    """
+    for p in patterns:
+        if p.startswith("="):
+            if squash(name, True) == squash(p[1:], True):
+                return True
+        elif squash(p) in squash(name):
+            return True
+    return False
+
+
 def passes_filters(ch: Channel, flt: dict) -> bool:
     group = ch.group.casefold()
     name = ch.name.casefold()
+
+    # Белый список по названию: если задан — остаются ТОЛЬКО эти каналы
+    whitelist = flt.get("include_names", [])
+    if whitelist and not matches_whitelist(ch.name, whitelist):
+        return False
 
     include = [g.casefold() for g in flt.get("include_groups", [])]
     exclude = [g.casefold() for g in flt.get("exclude_groups", [])]
