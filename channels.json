@@ -26,7 +26,7 @@
       ]
     },
     {
-      "name": "Локо",
+      "name": "Рен ТВ",
       "match": [
         "Рен ТВ"
       ]
@@ -129,7 +129,7 @@
     {
       "name": "Bridge Deluxe",
       "match": [
-        "Bridge Deluxe"
+        "Bridge Deluxe HD"
       ]
     },
     {
@@ -179,6 +179,12 @@
       "name": "Мульт",
       "match": [
         "Мульт"
+      ]
+    },
+    {
+      "name": "Retro Plus 2",
+      "match": [
+        "Retro Plus 2"
       ]
     }
   ]
