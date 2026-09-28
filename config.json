@@ -1,28 +1,21 @@
 {
   "sources": [
-    "https://iptv-org.github.io/iptv/languages/rus.m3u",
-    "https://iptv-org.github.io/iptv/languages/ukr.m3u"
+    "https://iptv-org.github.io/iptv/countries/ru.m3u",
+    "https://iptv-org.github.io/iptv/languages/rus.m3u"
   ],
 
+  "channels_file": "channels.json",
   "output": "playlist.m3u",
+  "epg_url": "",
 
   "check": {
     "enabled": true,
     "timeout": 4,
-    "concurrency": 100,
+    "concurrency": 50,
     "retries": 1,
+    "max_candidates": 8,
     "strict_hls": true,
     "keep_non_http": true,
     "user_agent": "Mozilla/5.0 (compatible; IPTV-Updater/1.0)"
-  },
-
-  "filters": {
-    "include_names": ["=Муз ТВ", "Рыбалка и охота", "=ТНТ"],
-    "include_groups": [],
-    "exclude_groups": ["xxx", "adult", "18+"],
-    "exclude_names": []
-  },
-
-  "sort_by_group": false,
-  "min_channels": 10
+  }
 }
