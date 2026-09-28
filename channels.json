@@ -3,8 +3,10 @@
     {
       "name": "Рыбалка и охота",
       "match": [
-        "=Рыбалка и охота",
-        "=Охота и рыбалка"
+        "Рыбалка и охота",
+        "Охота и рыбалка",
+        "Okhota i rybalka",
+        "Rybalka i okhota"
       ],
       "group": "Хобби",
       "logo": "https://tele100.ru/wp-content/uploads/2018/11/OXOTA_Logo.png"
