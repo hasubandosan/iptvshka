@@ -1,0 +1,22 @@
+{
+  "channels": [
+    { "name": "Муз ТВ", "group": "Музыка" },
+
+    {
+      "name": "Рыбалка и охота",
+      "match": ["=Рыбалка и охота", "=Охота и рыбалка"],
+      "group": "Хобби"
+    },
+
+    { "name": "ТНТ", "group": "Развлекательные" },
+
+    {
+      "name": "Мой канал (жёсткая ссылка)",
+      "url": ["http://example.com/live/main.m3u8", "http://example.com/live/backup.m3u8"],
+      "logo": "https://example.com/logo.png",
+      "tvg_id": "",
+      "group": "Свои",
+      "extra": []
+    }
+  ]
+}
