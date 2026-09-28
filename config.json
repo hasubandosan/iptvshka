@@ -10,6 +10,12 @@
     "https://m3u.su/bb3",
     "https://raw.githubusercontent.com/IPTVRU2026/IPTVMIR/main/IPTV_MEGA_PLAYLIST.m3u"
   ],
+  "blocked": [
+    "zabava-htlive.cdn.ngenix.net",
+    "ott.watch",
+    "ottclub",
+    "wink.ru"
+  ],
   "channels_file": "channels.json",
   "output": "playlist.m3u",
   "epg_url": "",
