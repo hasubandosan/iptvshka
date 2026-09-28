@@ -16,6 +16,20 @@
   ],
   "channels_file": "channels.json",
   "output": "playlist.m3u",
+  "sort": "manual",
+  "group_order": [
+    "Развлекательные",
+    "Музыка",
+    "Познавательные",
+    "Хобби"
+  ],
+  "adult": {
+    "enabled": true,
+    "groups": [
+      "Adults"
+    ],
+    "output": "playlist_adult.m3u"
+  },
   "epg_url": "",
   "check": {
     "enabled": true,
