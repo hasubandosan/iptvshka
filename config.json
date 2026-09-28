@@ -1,14 +1,14 @@
 {
   "sources": [
-    "https://iptv-org.github.io/iptv/countries/ru.m3u",
+    "https://m3u.su/rusm",
+    "https://m3u.su/tru",
     "https://iptv-org.github.io/iptv/languages/rus.m3u",
+    "https://m3u.su/ss",
+    "https://iptv-org.github.io/iptv/countries/ru.m3u",
     "https://iptv-org.github.io/iptv/countries/md.m3u",
     "https://m3u.su/lgx",
-    "https://m3u.su/ss",
-    "https://m3u.su/tru",
     "https://m3u.su/kk2",
-    "https://m3u.su/bb3",
-    "https://m3u.su/rusm"
+    "https://m3u.su/bb3"
   ],
   "channels_file": "channels.json",
   "output": "playlist.m3u",
