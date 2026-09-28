@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Редактор каналов</title>
+
+<!-- Tailwind по CDN: сборка не нужна -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  // Палитра: тёмный «студийный» фон + янтарный акцент (как сигнальная лампа On Air)
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: { sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'] },
+      colors: { ink: '#12151c', panel: '#1a1f2b', line: '#2b3245', mute: '#8b93a7', amber: '#f2b544' }
+    } }
+  }
+</script>
+<style>
+  body { background: #12151c; color: #e6e9f0; }
+  .field { width: 100%; background: #12151c; border: 1px solid #2b3245; border-radius: 8px; padding: 10px 12px; font-size: 15px; }
+  .field:focus { outline: 2px solid #f2b544; outline-offset: -1px; }
+  .btn { border-radius: 8px; padding: 9px 14px; font-size: 14px; font-weight: 500; border: 1px solid #2b3245; background: #1a1f2b; }
+  .btn:active { background: #232a3a; }
+  .btn-main { background: #f2b544; color: #1a1305; border-color: #f2b544; }
+  .btn-main:active { background: #d99d2e; }
+  .icon { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; color: #8b93a7; }
+  .icon:hover, .icon:active { background: #2b3245; color: #e6e9f0; }
+  .dragging { opacity: .4; }
+  .dropline { box-shadow: 0 -2px 0 0 #f2b544; }
+</style>
+</head>
+
+<body class="font-sans min-h-screen pb-24">
+
+<!-- ============ Шапка ============ -->
+<header class="sticky top-0 z-20 bg-ink/95 backdrop-blur border-b border-line" style="padding-top: env(safe-area-inset-top)">
+  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-2">
+    <h1 class="text-lg font-semibold flex-1 truncate">Мои каналы <span id="dirty" class="hidden text-amber text-sm font-normal">· не сохранено</span></h1>
+    <button id="btnSettings" class="btn">GitHub</button>
+    <button id="btnSave" class="btn btn-main">Сохранить</button>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 pt-4">
+
+  <!-- ============ Панель действий ============ -->
+  <div class="flex flex-wrap gap-2 mb-3">
+    <button id="btnLoad" class="btn">Загрузить с GitHub</button>
+    <button id="btnFile" class="btn">Открыть файл</button>
+    <button id="btnExport" class="btn">Скачать JSON</button>
+    <input id="fileInput" type="file" accept=".json,application/json" class="hidden">
+  </div>
+
+  <div class="flex gap-2 mb-2">
+    <input id="search" class="field" placeholder="Поиск по названию или группе">
+    <select id="groupFilter" class="field" style="width: 44%"></select>
+  </div>
+  <div id="stats" class="text-sm text-mute mb-3"></div>
+
+  <!-- Список каналов -->
+  <div id="list" class="space-y-2"></div>
+</main>
+
+<!-- Кнопка «добавить» -->
+<button id="btnAdd" class="btn btn-main fixed right-4 shadow-lg" style="bottom: calc(16px + env(safe-area-inset-bottom)); padding: 13px 20px; font-size: 15px">+ Канал</button>
+
+<!-- ============ Окно редактирования канала ============ -->
+<div id="editModal" class="hidden fixed inset-0 z-30 bg-black/70 overflow-y-auto">
+  <div class="max-w-lg mx-auto my-6 mx-4 bg-panel border border-line rounded-xl p-4 space-y-3" style="margin-left:16px;margin-right:16px">
+    <h2 id="editTitle" class="text-lg font-semibold">Канал</h2>
+
+    <label class="block text-sm text-mute">Название
+      <input id="fName" class="field mt-1" placeholder="Например, Муз ТВ">
+    </label>
+
+    <div class="flex gap-2">
+      <label class="block text-sm text-mute flex-1">Группа
+        <input id="fGroup" class="field mt-1" placeholder="Музыка">
+      </label>
+      <label class="block text-sm text-mute flex-1">tvg-id
+        <input id="fTvgId" class="field mt-1" placeholder="необязательно">
+      </label>
+    </div>
+
+    <label class="block text-sm text-mute">Ссылка на логотип
+      <input id="fLogo" class="field mt-1" placeholder="https://...png">
+    </label>
+
+    <!-- Тип: искать в источниках или своя ссылка -->
+    <div class="flex rounded-lg border border-line overflow-hidden text-sm">
+      <button type="button" data-type="search" class="typeBtn flex-1 py-2">Искать в источниках</button>
+      <button type="button" data-type="pinned" class="typeBtn flex-1 py-2">Своя ссылка</button>
+    </div>
+
+    <label id="boxUrl" class="block text-sm text-mute">Ссылки на поток (по одной в строке; следующие — запасные)
+      <textarea id="fUrl" rows="3" class="field mt-1" placeholder="http://.../stream.m3u8"></textarea>
+    </label>
+
+    <label id="boxMatch" class="block text-sm text-mute">Варианты названия для поиска (по одному в строке, необязательно)
+      <textarea id="fMatch" rows="3" class="field mt-1" placeholder="=Рыбалка и охота&#10;=Охота и рыбалка"></textarea>
+      <span class="block mt-1 text-xs">«=» в начале — точное совпадение; без «=» — название содержит эту часть. Если пусто, ищется точное название канала.</span>
+    </label>
+
+    <div class="flex justify-end gap-2 pt-1">
+      <button id="editCancel" class="btn">Отмена</button>
+      <button id="editOk" class="btn btn-main">Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Окно настроек GitHub ============ -->
+<div id="ghModal" class="hidden fixed inset-0 z-30 bg-black/70 overflow-y-auto">
+  <div class="max-w-lg my-6 bg-panel border border-line rounded-xl p-4 space-y-3" style="margin-left:16px;margin-right:16px">
+    <h2 class="text-lg font-semibold">Подключение к GitHub</h2>
+    <p class="text-sm text-mute">Нужно, чтобы загружать и сохранять <code>channels.json</code> прямо в репозиторий. После сохранения GitHub Actions сам пересоберёт плейлист.</p>
+
+    <label class="block text-sm text-mute">Репозиторий
+      <input id="ghRepo" class="field mt-1" placeholder="ваш-логин/iptv-manager">
+    </label>
+    <div class="flex gap-2">
+      <label class="block text-sm text-mute flex-1">Ветка
+        <input id="ghBranch" class="field mt-1" placeholder="main">
+      </label>
+      <label class="block text-sm text-mute flex-1">Файл
+        <input id="ghPath" class="field mt-1" placeholder="channels.json">
+      </label>
+    </div>
+    <label class="block text-sm text-mute">Токен доступа
+      <input id="ghToken" type="password" class="field mt-1" placeholder="github_pat_...">
+    </label>
+    <p class="text-xs text-mute">Создайте fine-grained токен (GitHub → Settings → Developer settings → Personal access tokens) только для этого репозитория с правом Contents: Read and write. Токен хранится только в вашем браузере.</p>
+
+    <div class="flex justify-end gap-2">
+      <button id="ghCancel" class="btn">Закрыть</button>
+      <button id="ghOk" class="btn btn-main">Запомнить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Уведомления -->
+<div id="toast" class="hidden fixed left-1/2 -translate-x-1/2 z-40 bg-panel border border-line rounded-lg px-4 py-2 text-sm shadow-lg max-w-[90%]" style="top: calc(70px + env(safe-area-inset-top))"></div>
+
+<script>
+/* =====================================================================
+   Состояние
+   doc      — весь файл channels.json (неизвестные поля сохраняются)
+   doc.channels — массив каналов; порядок = порядок в плейлисте
+   ===================================================================== */
+let doc = { channels: [] };
+let fileSha = null;      // sha файла на GitHub (нужен для сохранения)
+let dirty = false;       // есть несохранённые изменения
+let editIndex = -1;      // индекс редактируемого канала (-1 = новый)
+let editType = 'search'; // 'search' | 'pinned'
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toList = v => v == null || v === '' ? [] : (Array.isArray(v) ? v : [v]);
+const isPinned = e => toList(e.url).length > 0;
+
+/* ---------- Уведомления ---------- */
+let toastTimer;
+function toast(text) {
+  const t = $('toast');
+  t.textContent = text;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 3500);
+}
+
+function markDirty(v = true) {
+  dirty = v;
+  $('dirty').classList.toggle('hidden', !v);
+}
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+/* =====================================================================
+   Отрисовка списка
+   ===================================================================== */
+function filtered() {
+  const q = $('search').value.trim().toLowerCase();
+  const g = $('groupFilter').value;
+  return doc.channels
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => (!g || (e.group || '') === g) &&
+      (!q || (e.name || '').toLowerCase().includes(q) || (e.group || '').toLowerCase().includes(q)));
+}
+
+function render() {
+  // выпадающий список групп
+  const groups = [...new Set(doc.channels.map(e => e.group).filter(Boolean))];
+  const cur = $('groupFilter').value;
+  $('groupFilter').innerHTML = '<option value="">Все группы</option>' +
+    groups.map(g => `<option ${g === cur ? 'selected' : ''}>${esc(g)}</option>`).join('');
+
+  const items = filtered();
+  // перестановка имеет смысл только когда виден весь список
+  const canMove = items.length === doc.channels.length;
+  const pinnedCount = doc.channels.filter(isPinned).length;
+  $('stats').textContent = `Всего: ${doc.channels.length} · из источников: ${doc.channels.length - pinnedCount} · своих ссылок: ${pinnedCount}` +
+    (canMove ? '' : ' · сбросьте поиск, чтобы менять порядок');
+
+  if (!doc.channels.length) {
+    $('list').innerHTML = `<div class="text-center text-mute py-12">Список пуст.<br>Загрузите channels.json или добавьте первый канал кнопкой «+ Канал».</div>`;
+    return;
+  }
+
+  $('list').innerHTML = items.map(({ e, i }) => `
+    <div class="card bg-panel border border-line rounded-xl p-3" data-i="${i}" draggable="${canMove}">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-lg bg-ink border border-line grid place-items-center overflow-hidden shrink-0">
+          ${e.logo ? `<img src="${esc(e.logo)}" class="max-w-full max-h-full object-contain" referrerpolicy="no-referrer" onerror="this.replaceWith('📺')">` : '📺'}
+        </div>
+        <button data-act="edit" class="min-w-0 flex-1 text-left">
+          <div class="font-medium truncate">${esc(e.name || 'Без названия')}</div>
+          <div class="text-xs text-mute truncate">${isPinned(e) ? 'своя ссылка' : 'поиск в источниках'} · ${esc(e.group || 'без группы')}</div>
+        </button>
+        <div class="flex shrink-0">
+          <button data-act="up"   class="icon ${canMove ? '' : 'invisible'}" title="Выше">▲</button>
+          <button data-act="down" class="icon ${canMove ? '' : 'invisible'}" title="Ниже">▼</button>
+          <button data-act="del"  class="icon" title="Удалить">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* =====================================================================
+   Действия над списком: вверх / вниз / удалить / открыть
+   ===================================================================== */
+function move(from, to) {
+  if (to < 0 || to >= doc.channels.length || from === to) return;
+  const [item] = doc.channels.splice(from, 1);
+  doc.channels.splice(to, 0, item);
+  markDirty(); render();
+}
+
+$('list').addEventListener('click', ev => {
+  const btn = ev.target.closest('[data-act]');
+  if (!btn) return;
+  const i = +btn.closest('.card').dataset.i;
+  const act = btn.dataset.act;
+  if (act === 'up') move(i, i - 1);
+  if (act === 'down') move(i, i + 1);
+  if (act === 'edit') openEdit(i);
+  if (act === 'del' && confirm(`Удалить «${doc.channels[i].name}»?`)) {
+    doc.channels.splice(i, 1); markDirty(); render();
+  }
+});
+
+/* ---------- Drag & Drop (мышь). На телефоне используйте ▲ ▼ ---------- */
+let dragFrom = null;
+$('list').addEventListener('dragstart', ev => {
+  const card = ev.target.closest('.card'); if (!card) return;
+  dragFrom = +card.dataset.i;
+  card.classList.add('dragging');
+  ev.dataTransfer.effectAllowed = 'move';
+});
+$('list').addEventListener('dragend', () => { dragFrom = null; render(); });
+$('list').addEventListener('dragover', ev => {
+  const card = ev.target.closest('.card');
+  if (!card || dragFrom === null) return;
+  ev.preventDefault();
+  document.querySelectorAll('.dropline').forEach(c => c.classList.remove('dropline'));
+  card.classList.add('dropline');
+});
+$('list').addEventListener('drop', ev => {
+  const card = ev.target.closest('.card');
+  if (!card || dragFrom === null) return;
+  ev.preventDefault();
+  move(dragFrom, +card.dataset.i);
+});
+
+$('search').addEventListener('input', render);
+$('groupFilter').addEventListener('change', render);
+
+/* =====================================================================
+   Окно редактирования канала
+   ===================================================================== */
+function setType(t) {
+  editType = t;
+  document.querySelectorAll('.typeBtn').forEach(b => {
+    const on = b.dataset.type === t;
+    b.style.background = on ? '#f2b544' : 'transparent';
+    b.style.color = on ? '#1a1305' : '#e6e9f0';
+  });
+  $('boxUrl').classList.toggle('hidden', t !== 'pinned');
+  $('boxMatch').classList.toggle('hidden', t !== 'search');
+}
+document.querySelectorAll('.typeBtn').forEach(b => b.addEventListener('click', () => setType(b.dataset.type)));
+
+function openEdit(i) {
+  editIndex = i;
+  const e = i >= 0 ? doc.channels[i] : {};
+  $('editTitle').textContent = i >= 0 ? 'Редактировать канал' : 'Новый канал';
+  $('fName').value = e.name || '';
+  $('fGroup').value = e.group || '';
+  $('fTvgId').value = e.tvg_id || '';
+  $('fLogo').value = e.logo || '';
+  $('fUrl').value = toList(e.url).join('\n');
+  $('fMatch').value = toList(e.match).join('\n');
+  setType(isPinned(e) ? 'pinned' : 'search');
+  $('editModal').classList.remove('hidden');
+  $('fName').focus();
+}
+
+$('editOk').addEventListener('click', () => {
+  const lines = id => $(id).value.split('\n').map(s => s.trim()).filter(Boolean);
+  const name = $('fName').value.trim();
+  if (!name) return toast('Введите название канала');
+  if (editType === 'pinned' && !lines('fUrl').length) return toast('Добавьте хотя бы одну ссылку на поток');
+
+  // берём старый объект целиком, чтобы не потерять поля, которых нет в форме (extra, tvg_name...)
+  const e = editIndex >= 0 ? { ...doc.channels[editIndex] } : {};
+  const set = (key, val) => { if (val && val.length) e[key] = val; else delete e[key]; };
+
+  e.name = name;
+  set('group', $('fGroup').value.trim());
+  set('tvg_id', $('fTvgId').value.trim());
+  set('logo', $('fLogo').value.trim());
+
+  if (editType === 'pinned') {
+    const urls = lines('fUrl');
+    e.url = urls.length === 1 ? urls[0] : urls;
+    delete e.match;
+  } else {
+    delete e.url;
+    set('match', lines('fMatch'));
+  }
+
+  if (editIndex >= 0) doc.channels[editIndex] = e; else doc.channels.push(e);
+  $('editModal').classList.add('hidden');
+  markDirty(); render();
+});
+$('editCancel').addEventListener('click', () => $('editModal').classList.add('hidden'));
+$('btnAdd').addEventListener('click', () => openEdit(-1));
+
+/* =====================================================================
+   Файлы: открыть с устройства / скачать
+   ===================================================================== */
+function loadDoc(text) {
+  const parsed = JSON.parse(text);
+  if (!parsed || !Array.isArray(parsed.channels)) throw new Error('В файле нет массива "channels"');
+  doc = parsed;
+  markDirty(false); render();
+}
+
+$('btnFile').addEventListener('click', () => $('fileInput').click());
+$('fileInput').addEventListener('change', async ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  try { loadDoc(await f.text()); fileSha = null; toast('Файл открыт'); }
+  catch (err) { toast('Ошибка: ' + err.message); }
+  ev.target.value = '';
+});
+
+$('btnExport').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(doc, null, 2) + '\n'], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'channels.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* =====================================================================
+   GitHub: загрузка и сохранение channels.json через API
+   ===================================================================== */
+const gh = () => JSON.parse(localStorage.getItem('iptv-gh') || '{}');
+
+// UTF-8 <-> base64 (обычные btoa/atob ломают кириллицу)
+const b64enc = s => { let bin = ''; new TextEncoder().encode(s).forEach(x => bin += String.fromCharCode(x)); return btoa(bin); };
+const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, '')), c => c.charCodeAt(0)));
+
+function ghReady() {
+  const c = gh();
+  if (!c.repo || !c.token) { toast('Сначала введите репозиторий и токен в «GitHub»'); openGh(); return null; }
+  return {
+    url: `https://api.github.com/repos/${c.repo}/contents/${c.path || 'channels.json'}`,
+    branch: c.branch || 'main',
+    headers: { Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github+json' }
+  };
+}
+
+$('btnLoad').addEventListener('click', async () => {
+  const g = ghReady(); if (!g) return;
+  if (dirty && !confirm('Есть несохранённые изменения. Загрузить версию с GitHub поверх них?')) return;
+  try {
+    const r = await fetch(`${g.url}?ref=${g.branch}`, { headers: g.headers, cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status === 404 ? 'файл не найден' : r.status === 401 ? 'неверный токен' : 'HTTP ' + r.status);
+    const data = await r.json();
+    loadDoc(b64dec(data.content));
+    fileSha = data.sha;
+    toast('Загружено с GitHub');
+  } catch (err) { toast('Не удалось загрузить: ' + err.message); }
+});
+
+$('btnSave').addEventListener('click', async () => {
+  const g = ghReady(); if (!g) return;
+  try {
+    // если sha неизвестен (файл открыт с устройства) — берём актуальный, чтобы перезаписать файл
+    if (!fileSha) {
+      const r0 = await fetch(`${g.url}?ref=${g.branch}`, { headers: g.headers, cache: 'no-store' });
+      if (r0.ok) fileSha = (await r0.json()).sha;
+    }
+    const body = {
+      message: 'chore: update channels via editor',
+      content: b64enc(JSON.stringify(doc, null, 2) + '\n'),
+      branch: g.branch,
+      ...(fileSha ? { sha: fileSha } : {})
+    };
+    const r = await fetch(g.url, { method: 'PUT', headers: { ...g.headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (r.status === 409 || r.status === 422) throw new Error('файл на GitHub изменился — нажмите «Загрузить с GitHub»');
+    if (r.status === 401 || r.status === 403 || r.status === 404) throw new Error('нет доступа: проверьте токен и права Contents: Read and write');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    fileSha = (await r.json()).content.sha;
+    markDirty(false);
+    toast('Сохранено. Плейлист обновится через минуту-две');
+  } catch (err) { toast('Не удалось сохранить: ' + err.message); }
+});
+
+/* ---------- Окно настроек GitHub ---------- */
+function openGh() {
+  const c = gh();
+  $('ghRepo').value = c.repo || '';
+  $('ghBranch').value = c.branch || 'main';
+  $('ghPath').value = c.path || 'channels.json';
+  $('ghToken').value = c.token || '';
+  $('ghModal').classList.remove('hidden');
+}
+$('btnSettings').addEventListener('click', openGh);
+$('ghCancel').addEventListener('click', () => $('ghModal').classList.add('hidden'));
+$('ghOk').addEventListener('click', () => {
+  localStorage.setItem('iptv-gh', JSON.stringify({
+    repo: $('ghRepo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''),
+    branch: $('ghBranch').value.trim() || 'main',
+    path: $('ghPath').value.trim() || 'channels.json',
+    token: $('ghToken').value.trim()
+  }));
+  $('ghModal').classList.add('hidden');
+  toast('Настройки сохранены');
+});
+
+/* ---------- Старт ---------- */
+render();
+</script>
+</body>
+</html>
