@@ -144,6 +144,42 @@
         "ОРТ",
         "Первый"
       ]
+    },
+    {
+      "name": "Карусель",
+      "match": [
+        "Карусель"
+      ]
+    },
+    {
+      "name": "Disney",
+      "match": [
+        "Disney"
+      ]
+    },
+    {
+      "name": "AnimeTV",
+      "match": [
+        "Anime"
+      ]
+    },
+    {
+      "name": "Cartoon Network",
+      "match": [
+        "Cartoon Network"
+      ]
+    },
+    {
+      "name": "Nickelodeon",
+      "match": [
+        "Nickelodeon"
+      ]
+    },
+    {
+      "name": "Мульт",
+      "match": [
+        "Мульт"
+      ]
     }
   ]
 }
