@@ -75,6 +75,44 @@ def is_blocked(url: str, patterns: list[str]) -> bool:
     return any(p.lower() in low for p in patterns if p)
 
 
+def is_adult(ch: Channel, entry: dict, adult_cfg: dict) -> bool:
+    """Канал для взрослых: entry['adult']=true или group-title входит в adult.groups."""
+    if not adult_cfg.get("enabled", False):
+        return False
+    if entry.get("adult") is True:
+        return True
+    if entry.get("adult") is False:
+        return False
+    group = squash(ch.attrs.get("group-title", ""))
+    return any(squash(g) == group for g in as_list(adult_cfg.get("groups", ["Adults"])))
+
+
+def sort_channels(pairs: list, cfg: dict) -> list:
+    """
+    pairs = [(entry, channel), ...] в порядке channels.json.
+    sort: manual (как в channels.json) | name | group | group_name
+    group_order: список групп в нужном порядке; остальные идут после них по алфавиту.
+    Внутри одной группы порядок как в channels.json (для group) или по названию (для group_name).
+    """
+    mode = cfg.get("sort", "manual")
+    if mode == "manual":
+        return pairs
+    order = {squash(g): i for i, g in enumerate(as_list(cfg.get("group_order")))}
+
+    def gkey(ch: Channel):
+        g = squash(ch.attrs.get("group-title", ""))
+        return (order.get(g, len(order)), g)
+
+    if mode == "name":
+        return sorted(pairs, key=lambda p: squash(p[1].name))
+    if mode == "group":
+        return sorted(pairs, key=lambda p: gkey(p[1]))  # stable: внутри группы порядок сохраняется
+    if mode == "group_name":
+        return sorted(pairs, key=lambda p: (gkey(p[1]), squash(p[1].name)))
+    print(f"  ! Неизвестный режим sort='{mode}', использую manual")
+    return pairs
+
+
 def as_list(value) -> list:
     if value is None or value == "":
         return []
@@ -242,12 +280,15 @@ async def main(config_path: str) -> int:
 
     entries = json.loads(Path(cfg.get("channels_file", "channels.json")).read_text(encoding="utf-8"))["channels"]
     out_path = Path(cfg.get("output", "playlist.m3u"))
+    adult_cfg = cfg.get("adult", {})
+    adult_path = Path(adult_cfg.get("output", "playlist_adult.m3u"))
 
-    # Прошлая версия плейлиста — запасной вариант, если свежий поток не найден
+    # Прошлые версии плейлистов (обычный + для взрослых) — запасной вариант, если свежий поток не найден
     previous: dict[str, Channel] = {}
-    if out_path.exists():
-        _, prev_channels = parse_m3u(out_path.read_text(encoding="utf-8"))
-        previous = {squash(c.name): c for c in prev_channels}
+    for prev_path in (out_path, adult_path):
+        if prev_path.exists():
+            _, prev_channels = parse_m3u(prev_path.read_text(encoding="utf-8"))
+            previous.update({squash(c.name): c for c in prev_channels})
 
     headers = {"User-Agent": check_cfg.get("user_agent", "Mozilla/5.0")}
     connector = aiohttp.TCPConnector(limit=check_cfg.get("concurrency", 100), ssl=False)
@@ -303,23 +344,34 @@ async def main(config_path: str) -> int:
         "not_found": "НЕ НАЙДЕН в источниках (проверьте название или добавьте источник)",
         "all_dead": "НАЙДЕН, но все потоки не отвечают",
     }
-    result: list[Channel] = []
+    pairs: list = []
     problems = 0
     for entry, (channel, status) in zip(entries, results):
         print(f"  [{labels[status]}] {entry['name']}")
         if status != "ok":
             problems += 1
         if channel:
-            result.append(channel)
+            pairs.append((entry, channel))
 
-    if not result:
-        print("! Итоговый плейлист пуст. Файл НЕ перезаписан.")
+    if not pairs:
+        print("! Итоговый плейлист пуст. Файлы НЕ перезаписаны.")
         return 1
 
-    print("[3/3] Запись файла...")
-    body = "\n".join(channel_to_m3u(c) for c in result)
-    out_path.write_text(f"{out_header}\n{body}\n", encoding="utf-8")
-    print(f"Готово: {len(result)}/{len(entries)} каналов, проблем: {problems} -> {out_path} ({time.time() - started:.0f} c)")
+    # Делим на обычные и «для взрослых», затем сортируем каждый список
+    adult_pairs = [p for p in pairs if is_adult(p[1], p[0], adult_cfg)]
+    main_pairs = [p for p in pairs if p not in adult_pairs]
+    main_pairs = sort_channels(main_pairs, cfg)
+    adult_pairs = sort_channels(adult_pairs, cfg)
+
+    print("[3/3] Запись файлов...")
+    body = "\n".join(channel_to_m3u(c) for _, c in main_pairs)
+    out_path.write_text(f"{out_header}\n{body}\n" if body else f"{out_header}\n", encoding="utf-8")
+    print(f"  {out_path}: {len(main_pairs)} каналов")
+    if adult_cfg.get("enabled", False):
+        body = "\n".join(channel_to_m3u(c) for _, c in adult_pairs)
+        adult_path.write_text(f"{out_header}\n{body}\n" if body else f"{out_header}\n", encoding="utf-8")
+        print(f"  {adult_path}: {len(adult_pairs)} каналов")
+    print(f"Готово: {len(pairs)}/{len(entries)} каналов, проблем: {problems} ({time.time() - started:.0f} c)")
     return 0
 
 
