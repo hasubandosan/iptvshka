@@ -31,11 +31,17 @@
     },
     {
       "name": "Hustler",
-      "group": "Adults"
+      "group": "Adults",
+      "match": [
+        "Hustler"
+      ]
     },
     {
       "name": "RedTraffic",
-      "group": "Adults"
+      "group": "Adults",
+      "match": [
+        "RedTraffic"
+      ]
     }
   ]
 }
