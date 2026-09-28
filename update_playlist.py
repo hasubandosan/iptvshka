@@ -69,6 +69,12 @@ def name_matches(name: str, patterns: list[str]) -> bool:
     return False
 
 
+def is_blocked(url: str, patterns: list[str]) -> bool:
+    """URL содержит любую из подстрок (без учёта регистра) -> источник заблокирован по региону."""
+    low = url.lower()
+    return any(p.lower() in low for p in patterns if p)
+
+
 def as_list(value) -> list:
     if value is None or value == "":
         return []
@@ -206,10 +212,11 @@ async def resolve_pinned(entry, session, sem, check_cfg) -> tuple[str, bool]:
     return urls[0], False
 
 
-async def resolve_search(entry, pool, session, sem, check_cfg) -> tuple[Channel | None, int]:
+async def resolve_search(entry, pool, session, sem, check_cfg, blocked) -> tuple[Channel | None, int]:
     """Ищет канал по названию в пуле источников, возвращает первый рабочий вариант."""
     patterns = as_list(entry.get("match")) or ["=" + entry["name"]]
-    candidates = [c for c in pool if name_matches(c.name, patterns)]
+    bad = blocked + as_list(entry.get("exclude"))  # глобальный + свой список для канала
+    candidates = [c for c in pool if name_matches(c.name, patterns) and not is_blocked(c.url, bad)]
     # точное совпадение названия — вперёд (сортировка стабильная, порядок источников сохраняется)
     target = squash(entry["name"], True)
     candidates.sort(key=lambda c: squash(c.name, True) != target)
@@ -231,6 +238,7 @@ async def main(config_path: str) -> int:
     started = time.time()
     cfg = json.loads(Path(config_path).read_text(encoding="utf-8"))
     check_cfg = cfg.get("check", {})
+    blocked = as_list(cfg.get("blocked"))  # хосты/подстроки, недоступные из вашего региона
 
     entries = json.loads(Path(cfg.get("channels_file", "channels.json")).read_text(encoding="utf-8"))["channels"]
     out_path = Path(cfg.get("output", "playlist.m3u"))
@@ -273,12 +281,14 @@ async def main(config_path: str) -> int:
         async def handle(entry: dict) -> tuple[Channel | None, str]:
             if entry.get("url"):
                 url, alive = await resolve_pinned(entry, session, sem, check_cfg)
+                if is_blocked(url, blocked):
+                    return build_channel(entry, url), "pinned_blocked"
                 return build_channel(entry, url), ("ok" if alive else "pinned_dead")
-            src, n = await resolve_search(entry, pool, session, sem, check_cfg)
+            src, n = await resolve_search(entry, pool, session, sem, check_cfg, blocked)
             if src:
                 return build_channel(entry, src.url, src), "ok"
             old = previous.get(squash(entry["name"]))
-            if old:
+            if old and not is_blocked(old.url, blocked + as_list(entry.get("exclude"))):
                 return build_channel(entry, old.url, old), "kept_old"
             return None, ("not_found" if n == 0 else "all_dead")
 
@@ -287,6 +297,7 @@ async def main(config_path: str) -> int:
     # 3. Отчёт и запись
     labels = {
         "ok": "OK",
+        "pinned_blocked": "ВНИМАНИЕ: ваша ссылка ведёт на заблокированный хост (оставлена как есть)",
         "pinned_dead": "ВНИМАНИЕ: ваша ссылка не отвечает (оставлена как есть)",
         "kept_old": "ВНИМАНИЕ: свежий поток не найден, оставлена ссылка из прошлого плейлиста",
         "not_found": "НЕ НАЙДЕН в источниках (проверьте название или добавьте источник)",
