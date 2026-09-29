@@ -1,3 +1,31 @@
 #EXTM3U url-tvg="https://iptvx.one/EPG_LITE" catchup="append" catchup-days="3" catchup-source="?offset=-${offset}&utcstart=${timestamp}"
 #EXTINF:-1 tvg-logo="https://i.ibb.co/mXsbRw6/redtraffic-1.png" group-title="Adults",RedTraffic
 http://live.redtraffic.xyz/bigass.m3u8?fluxuslust.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Big Ass
+http://cdn.adultiptv.net/bigass.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Big Tits
+http://live.redtraffic.xyz/bigtits.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Big Dick
+http://cdn.adultiptv.net/bigdick.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Hardcore
+http://live.redtraffic.xyz/hardcore.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Interracial
+http://cdn.adultiptv.net/interracial.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Milf
+http://cdn.adultiptv.net/milf.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Pornstar
+http://cdn.adultiptv.net/pornstar.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Rough
+http://cdn.adultiptv.net/rough.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Russian
+http://cdn.adultiptv.net/russian.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Teen
+http://cdn.adultiptv.net/teen.m3u8
+#EXTINF:-1 group-title="Adults",Adult IPTV Threesome
+http://cdn.adultiptv.net/threesome.m3u8
+#EXTINF:-1 group-title="Adults",Brazzers TV
+http://88.212.7.11/live/test_brazzers_hd_hevc/playlist.m3u8
+#EXTINF:-1 group-title="Adults",Extasy HD
+http://88.212.7.11/live/test_extasy_hd_hevc/playlist.m3u8
+#EXTINF:-1 group-title="Adults",Reality Kings
+http://88.212.7.11/live/test_realitykings_sd_hevc/playlist.m3u8
