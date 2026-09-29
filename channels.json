@@ -318,25 +318,11 @@
       ]
     },
     {
-      "name": "Penthouse Passion",
+      "name": "Penthouse Passion HD",
       "match": [
-        "Penthouse Passion"
+        "Penthouse Passion HD"
       ],
       "group": "Adults"
-    },
-    {
-      "name": "RedTraffic",
-      "group": "Adults",
-      "match": [
-        "RedTraffic"
-      ]
-    },
-    {
-      "name": "Hustler",
-      "group": "Adults",
-      "match": [
-        "Hustler"
-      ]
     },
     {
       "name": "Adult IPTV Big Ass",
@@ -360,10 +346,10 @@
       ]
     },
     {
-      "name": "Adult IPTV Big Blonde",
+      "name": "Adult IPTV Blonde",
       "group": "Adults",
       "match": [
-        "Adult IPTV Big Blonde"
+        "Adult IPTV Blonde"
       ]
     },
     {
@@ -433,7 +419,9 @@
       "name": "Dorcel HD Smakovka",
       "group": "Adults",
       "match": [
-        "Dorcel HD"
+        "Dorcel HD",
+        "Dorcel",
+        "Dorcel TV HD"
       ]
     },
     {
@@ -488,7 +476,7 @@
     {
       "name": "Кино ТВ HD",
       "match": [
-        "Кино ТВ HD"
+        "KINO TV HD"
       ],
       "group": "Фильмы"
     },
