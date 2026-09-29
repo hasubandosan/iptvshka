@@ -512,7 +512,7 @@
       "name": "Дом Кино",
       "group": "Фильмы",
       "match": [
-        "Дом Кино"
+        "Dom Kino"
       ]
     },
     {
@@ -533,14 +533,14 @@
       "name": "Дом Кино International",
       "group": "Фильмы",
       "match": [
-        "Дом Кино International"
+        "Dom Kino International"
       ]
     },
     {
-      "name": "Дом Кино Премиум",
+      "name": "Дом Кино Premium",
       "group": "Фильмы",
       "match": [
-        "Дом Кино Premium"
+        "Dom Kino Premium"
       ]
     },
     {
