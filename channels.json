@@ -100,6 +100,13 @@
       "group": "Общее"
     },
     {
+      "name": "KVN TV",
+      "match": [
+        "KVN TV"
+      ],
+      "group": "Общее"
+    },
+    {
       "name": "Охотник и рыболов",
       "match": [
         "Охотник и рыболов"
@@ -515,10 +522,10 @@
       ]
     },
     {
-      "name": "Кинопремьера",
+      "name": "Дом Кино",
       "group": "Фильмы",
       "match": [
-        "Кинопремьера"
+        "Дом Кино"
       ]
     },
     {
@@ -533,6 +540,203 @@
       "group": "Фильмы",
       "match": [
         "Мужское кино"
+      ]
+    },
+    {
+      "name": "Дом Кино International",
+      "group": "Фильмы",
+      "match": [
+        "Дом Кино International"
+      ]
+    },
+    {
+      "name": "Дом Кино Премиум",
+      "group": "Фильмы",
+      "match": [
+        "Дом Кино Premium"
+      ]
+    },
+    {
+      "name": "Еврокино",
+      "group": "Фильмы",
+      "match": [
+        "Еврокино"
+      ]
+    },
+    {
+      "name": "Кино 1 International",
+      "group": "Фильмы",
+      "match": [
+        "Кино 1 International"
+      ]
+    },
+    {
+      "name": "Kino 1",
+      "group": "Фильмы",
+      "match": [
+        "Kino 1"
+      ]
+    },
+    {
+      "name": "Kino 2",
+      "group": "Фильмы",
+      "match": [
+        "Kino 2"
+      ]
+    },
+    {
+      "name": "Kino TV",
+      "group": "Фильмы",
+      "match": [
+        "Kino TV"
+      ]
+    },
+    {
+      "name": "Kinopokaz",
+      "group": "Фильмы",
+      "match": [
+        "Kinopokaz"
+      ]
+    },
+    {
+      "name": "Kinosemja",
+      "group": "Фильмы",
+      "match": [
+        "Kinosemja",
+        "Киносемья"
+      ]
+    },
+    {
+      "name": "Наше Мужское",
+      "group": "Фильмы",
+      "match": [
+        "Наше Мужское"
+      ]
+    },
+    {
+      "name": "Остросюжетное",
+      "group": "Фильмы",
+      "match": [
+        "Остросюжетное"
+      ]
+    },
+    {
+      "name": "Премиальное",
+      "group": "Фильмы",
+      "match": [
+        "Премиальное"
+      ]
+    },
+    {
+      "name": "Родное кино",
+      "group": "Фильмы",
+      "match": [
+        "Родное кино"
+      ]
+    },
+    {
+      "name": "Русский бестселлер",
+      "group": "Фильмы",
+      "match": [
+        "Русский бестселлер"
+      ]
+    },
+    {
+      "name": "Русский Детектив",
+      "group": "Фильмы",
+      "match": [
+        "Русский Детектив"
+      ]
+    },
+    {
+      "name": "Русский Иллюзия",
+      "group": "Фильмы",
+      "match": [
+        "Русский Иллюзия"
+      ]
+    },
+    {
+      "name": "TV 21 International",
+      "group": "Фильмы",
+      "match": [
+        "TV 21 International"
+      ]
+    },
+    {
+      "name": "viju+ Russkoe",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Russkoe"
+      ]
+    },
+    {
+      "name": "viju+ Action",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Action"
+      ]
+    },
+    {
+      "name": "viju+ Megahit",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Megahit"
+      ]
+    },
+    {
+      "name": "viju+ Premiera",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Premiera"
+      ]
+    },
+    {
+      "name": "Yes Movies Action",
+      "group": "Фильмы",
+      "match": [
+        "Yes Movies Action"
+      ]
+    },
+    {
+      "name": "Komedia",
+      "group": "Фильмы",
+      "match": [
+        "Komedia"
+      ]
+    },
+    {
+      "name": "Komediynoe HD",
+      "group": "Фильмы",
+      "match": [
+        "Komediynoe HD"
+      ]
+    },
+    {
+      "name": "viju+ Comedy",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Comedy"
+      ]
+    },
+    {
+      "name": "Amedia Hit",
+      "group": "Фильмы",
+      "match": [
+        "Amedia Hit"
+      ]
+    },
+    {
+      "name": "Bolt Russia",
+      "group": "Фильмы",
+      "match": [
+        "Bolt Russia"
+      ]
+    },
+    {
+      "name": "Nashe HD",
+      "group": "Фильмы",
+      "match": [
+        "Nashe HD"
       ]
     },
     {
