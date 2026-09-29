@@ -1,11 +1,11 @@
 {
   "sources": [
+    "https://m3u.su/bb3",
     "https://m3u.su/ss",
     "https://m3u.su/rusm",
     "https://m3u.su/tru",
     "https://iptv-org.github.io/iptv/index.m3u",
     "https://m3u.su/kk2",
-    "https://m3u.su/bb3",
     "https://raw.githubusercontent.com/IPTVRU2026/IPTVMIR/main/IPTV_MEGA_PLAYLIST.m3u"
   ],
   "blocked": [
