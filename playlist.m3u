@@ -57,21 +57,21 @@ http://188.113.190.15/69/tracks-v1a1/index.m3u8
 http://stream.mcquack.net/318/index.m3u8
 #EXTINF:-1 tvg-id="BRIDGEDeluxe.ru@HD" tvg-logo="https://i.imgur.com/EazL8w7.png" group-title="Музыка",Bridge Deluxe
 http://stream.mcquack.net/92/index.m3u8
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Музыка",Bridge Classic
+http://188.113.190.15/302/tracks-v1a1/index.m3u8
 #EXTINF:-1 tvg-id="RetroPlus2.cl@SD" tvg-logo="https://i.imgur.com/5G5kian.png" http-referrer="https://retroplustv.com/" group-title="Музыка",Retro Plus 2
 #EXTVLCOPT:http-referrer=https://retroplustv.com/
 https://tls-cl.cdnz.cl/retroplustvuno/live/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://i.imgur.com/uMw3kks.png" group-title="Музыка",DanceHits80
 http://dancehits80.denvs.ru:8080/index.m3u8
-#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Музыка",Bridge Classic
-http://188.113.190.15/302/tracks-v1a1/index.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/FKp9cV3y/062e8ddb0ba46e6f5702cab141a8555c.png" group-title="Музыка",Deluxe Rap
 http://sdn-global-live-streaming-packager-cache.3qsdn.com/65183/65183_264_live.m3u8
 #EXTINF:-1 tvg-logo="http://1lot.tv/ch/8880.png" group-title="Музыка",Radio M2O
 https://streamcdnm5-4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/index.m3u8
 #EXTINF:-1 tvg-id="no_epg_music" tvg-logo="https://smotrimkino.vip/uploads/posts/2019-07/1564013659_kronehit.jpg" group-title="Музыка",kronehit
 http://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b1628000.m3u8
-#EXTINF:-1 tvg-id="BarazaTV.gr@SD" tvg-logo="https://i.imgur.com/TZ1unwF.png" group-title="Музыка",baraza
-https://eco.streams.ovh:8081/barazatv/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="BarazaTVRelaxing.gr@SD" tvg-logo="https://i.imgur.com/TZ1unwF.png" group-title="Музыка",Baraza TV Relaxing
+https://rtmp.streams.ovh:1936/barazarelax/barazarelax/playlist.m3u8
 #EXTINF:-1 tvg-id="" group-title="Музыка",ТНТ Music HD
 https://tntm.mediacdn.ru/cdn/tntmusic/playlist.m3u8
 #EXTINF:-1 tvg-id="shanson-tv" tvg-logo="https://iptvx.one/picons/shanson-tv.png" group-title="Музыка",Шансон ТВ
