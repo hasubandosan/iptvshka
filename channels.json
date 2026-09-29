@@ -66,7 +66,8 @@
       "match": [
         "Матч ТВ"
       ],
-      "group": "Общее"
+      "group": "Общее",
+      "logo": "https://beachsoccer.com/wp-content/uploads/2021/08/MATCH-TV.png"
     },
     {
       "name": "Матч! Футбол 1",
@@ -284,7 +285,8 @@
       "match": [
         "kronehit"
       ],
-      "group": "Музыка"
+      "group": "Музыка",
+      "logo": "https://kuasark.com/files/stations-logos/kronehit.png"
     },
     {
       "name": "Baraza TV Relaxing",
@@ -336,13 +338,6 @@
       "group": "Музыка",
       "match": [
         "1HD Music"
-      ]
-    },
-    {
-      "name": "Baraza",
-      "group": "Музыка",
-      "match": [
-        "Baraza"
       ]
     },
     {
@@ -495,25 +490,11 @@
       "group": "Фильмы"
     },
     {
-      "name": "Кино ТВ HD",
-      "match": [
-        "KINO TV HD"
-      ],
-      "group": "Фильмы"
-    },
-    {
       "name": "Кинохит HD",
       "match": [
         "Кинохит"
       ],
       "group": "Фильмы"
-    },
-    {
-      "name": "Кинопоказ",
-      "group": "Фильмы",
-      "match": [
-        "Кинопоказ"
-      ]
     },
     {
       "name": "Kinosemja",
@@ -528,6 +509,20 @@
       "group": "Фильмы",
       "match": [
         "Kinopokaz"
+      ]
+    },
+    {
+      "name": "Мужское кино",
+      "group": "Фильмы",
+      "match": [
+        "Мужское кино"
+      ]
+    },
+    {
+      "name": "Родное кино",
+      "group": "Фильмы",
+      "match": [
+        "Родное кино"
       ]
     },
     {
@@ -587,11 +582,11 @@
       ]
     },
     {
-      "name": "Дом Кино",
-      "group": "Фильмы",
+      "name": "Кино ТВ HD",
       "match": [
-        "Dom Kino"
-      ]
+        "KINO TV HD"
+      ],
+      "group": "Фильмы"
     },
     {
       "name": "Мосфильм",
@@ -601,10 +596,10 @@
       ]
     },
     {
-      "name": "Мужское кино",
+      "name": "Дом Кино",
       "group": "Фильмы",
       "match": [
-        "Мужское кино"
+        "Dom Kino"
       ]
     },
     {
@@ -676,13 +671,6 @@
       "group": "Фильмы",
       "match": [
         "Premialnoe"
-      ]
-    },
-    {
-      "name": "Родное кино",
-      "group": "Фильмы",
-      "match": [
-        "Родное кино"
       ]
     },
     {
