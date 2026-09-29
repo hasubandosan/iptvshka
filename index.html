@@ -30,6 +30,12 @@
   .icon:hover, .icon:active { background: #2b3245; color: #e6e9f0; }
   .dragging { opacity: .4; }
   .dropline { box-shadow: 0 -2px 0 0 #f2b544; }
+  .dropline-b { box-shadow: 0 2px 0 0 #f2b544; }
+  .ghead { display: flex; align-items: center; gap: 8px; padding: 8px 4px 4px; cursor: pointer; user-select: none; border-bottom: 1px solid #2b3245; }
+  .ghead .gname { font-weight: 600; letter-spacing: .02em; }
+  .ghead .gcount { margin-left: auto; font-size: 12px; color: #8b93a7; background: #1a1f2b; border: 1px solid #2b3245; border-radius: 999px; padding: 1px 9px; }
+  .ghead .chev { color: #f2b544; width: 14px; }
+  .drophead { background: rgba(242, 181, 68, .12); border-bottom-color: #f2b544; }
 </style>
 </head>
 
@@ -224,6 +230,8 @@ function filtered() {
       (!q || (e.name || '').toLowerCase().includes(q) || (e.group || '').toLowerCase().includes(q)));
 }
 
+const collapsed = new Set(); // свёрнутые группы (только в интерфейсе)
+
 function render() {
   // выпадающий список групп
   const groups = [...new Set(doc.channels.map(e => e.group).filter(Boolean))];
@@ -243,7 +251,18 @@ function render() {
     return;
   }
 
-  $('list').innerHTML = items.map(({ e, i }) => `
+  // Группы в порядке первого появления в channels.json
+  const byGroup = new Map();
+  items.forEach(it => { const g = it.e.group || ''; if (!byGroup.has(g)) byGroup.set(g, []); byGroup.get(g).push(it); });
+  const gNames = [...byGroup.keys()];
+
+  $('list').innerHTML = gNames.map((g, gi) => {
+    const rows = byGroup.get(g);
+    const open = !collapsed.has(g);
+    const cards = rows.map(({ e, i }, k) => {
+      const canUp = canMove && !(gi === 0 && k === 0);
+      const canDown = canMove && !(gi === gNames.length - 1 && k === rows.length - 1);
+      return `
     <div class="card bg-panel border border-line rounded-xl p-3" data-i="${i}" draggable="${canMove}">
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 rounded-lg bg-ink border border-line grid place-items-center overflow-hidden shrink-0">
@@ -251,61 +270,145 @@ function render() {
         </div>
         <button data-act="edit" class="min-w-0 flex-1 text-left">
           <div class="font-medium truncate">${esc(e.name || 'Без названия')}</div>
-          <div class="text-xs text-mute truncate">${isPinned(e) ? 'своя ссылка' : 'поиск в источниках'} · ${esc(e.group || 'без группы')}</div>
+          <div class="text-xs text-mute truncate">${isPinned(e) ? 'своя ссылка' : 'поиск в источниках'}</div>
         </button>
         <div class="flex shrink-0">
-          <button data-act="up"   class="icon ${canMove ? '' : 'invisible'}" title="Выше">▲</button>
-          <button data-act="down" class="icon ${canMove ? '' : 'invisible'}" title="Ниже">▼</button>
+          <button data-act="up"   class="icon ${canUp ? '' : 'invisible'}" title="Выше">▲</button>
+          <button data-act="down" class="icon ${canDown ? '' : 'invisible'}" title="Ниже">▼</button>
           <button data-act="del"  class="icon" title="Удалить">✕</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+    }).join('');
+    return `
+  <section class="mb-4">
+    <div class="ghead" data-g="${esc(g)}" title="Свернуть / развернуть. Сюда можно перетащить канал.">
+      <span class="chev">${open ? '▾' : '▸'}</span>
+      <span class="gname">${esc(g || 'Без группы')}</span>
+      <span class="gcount">${rows.length}</span>
+    </div>
+    ${open ? `<div class="space-y-2 mt-2" data-g="${esc(g)}">${cards}</div>` : ''}
+  </section>`;
+  }).join('');
 }
 
 /* =====================================================================
    Действия над списком: вверх / вниз / удалить / открыть
    ===================================================================== */
-function move(from, to) {
-  if (to < 0 || to >= doc.channels.length || from === to) return;
-  const [item] = doc.channels.splice(from, 1);
-  doc.channels.splice(to, 0, item);
+// Порядок групп = порядок их первого появления в списке
+function groupOrder() {
+  const seen = [];
+  doc.channels.forEach(e => { const g = e.group || ''; if (!seen.includes(g)) seen.push(g); });
+  return seen;
+}
+// Собирает список так, чтобы каналы одной группы шли подряд (порядок групп сохраняется).
+// Тогда порядок на экране == порядок в channels.json == порядок в плейлисте.
+function normalize(order = groupOrder()) {
+  const all = [...new Set([...order, ...groupOrder()])];
+  doc.channels = all.flatMap(g => doc.channels.filter(e => (e.group || '') === g));
+}
+const firstIndexOf = g => { const k = doc.channels.findIndex(e => (e.group || '') === g); return k < 0 ? null : k; };
+
+// Переносит канал from в группу group: перед каналом beforeIdx, либо в конец группы (beforeIdx = null)
+function moveTo(from, group, beforeIdx) {
+  const order = groupOrder();
+  const item = doc.channels[from];
+  const target = beforeIdx === null ? null : doc.channels[beforeIdx];
+  if (!item || item === target) return;
+  const oldGroup = item.group || '';
+  doc.channels.splice(from, 1);
+  if (group) item.group = group; else delete item.group;
+  let pos;
+  if (target) pos = doc.channels.indexOf(target);
+  else {
+    let last = -1;
+    doc.channels.forEach((e, k) => { if ((e.group || '') === group) last = k; });
+    pos = last >= 0 ? last + 1 : doc.channels.length;
+  }
+  doc.channels.splice(pos, 0, item);
+  normalize(order);
   markDirty(); render();
+  if (oldGroup !== group) toast(`«${item.name}» → ${group || 'без группы'}`);
+}
+
+// Кнопки ▲ ▼: шаг внутри группы; с края группы канал уходит в соседнюю группу
+function step(i, dir) {
+  const g = doc.channels[i].group || '';
+  const order = groupOrder();
+  const same = doc.channels.map((e, k) => (e.group || '') === g ? k : -1).filter(k => k >= 0);
+  const pos = same.indexOf(i);
+  const gi = order.indexOf(g);
+  if (dir < 0) {
+    if (pos > 0) moveTo(i, g, same[pos - 1]);
+    else if (gi > 0) moveTo(i, order[gi - 1], null);
+  } else {
+    if (pos < same.length - 1) moveTo(i, g, pos + 2 < same.length ? same[pos + 2] : null);
+    else if (gi < order.length - 1) moveTo(i, order[gi + 1], firstIndexOf(order[gi + 1]));
+  }
 }
 
 $('list').addEventListener('click', ev => {
+  const head = ev.target.closest('.ghead');
+  if (head) {
+    const g = head.dataset.g;
+    if (collapsed.has(g)) collapsed.delete(g); else collapsed.add(g);
+    return render();
+  }
   const btn = ev.target.closest('[data-act]');
   if (!btn) return;
   const i = +btn.closest('.card').dataset.i;
   const act = btn.dataset.act;
-  if (act === 'up') move(i, i - 1);
-  if (act === 'down') move(i, i + 1);
+  if (act === 'up') step(i, -1);
+  if (act === 'down') step(i, 1);
   if (act === 'edit') openEdit(i);
   if (act === 'del' && confirm(`Удалить «${doc.channels[i].name}»?`)) {
     doc.channels.splice(i, 1); markDirty(); render();
   }
 });
 
-/* ---------- Drag & Drop (мышь). На телефоне используйте ▲ ▼ ---------- */
+/* ---------- Drag & Drop (мышь) ----------
+   • на карточку: вставить до/после неё (по половине высоты); если карточка из другой группы, канал меняет группу
+   • на заголовок группы: канал переезжает в начало этой группы (в том числе в свёрнутую)
+   На телефоне используйте ▲ ▼ (на краю группы канал переходит в соседнюю). */
 let dragFrom = null;
+const clearMarks = () => document.querySelectorAll('.dropline, .dropline-b, .drophead')
+  .forEach(c => c.classList.remove('dropline', 'dropline-b', 'drophead'));
+const isAfter = (ev, el) => { const r = el.getBoundingClientRect(); return ev.clientY > r.top + r.height / 2; };
+
 $('list').addEventListener('dragstart', ev => {
   const card = ev.target.closest('.card'); if (!card) return;
   dragFrom = +card.dataset.i;
   card.classList.add('dragging');
   ev.dataTransfer.effectAllowed = 'move';
+  ev.dataTransfer.setData('text/plain', String(dragFrom)); // Firefox не начинает перетаскивание без данных
 });
-$('list').addEventListener('dragend', () => { dragFrom = null; render(); });
+$('list').addEventListener('dragend', () => { dragFrom = null; clearMarks(); render(); });
 $('list').addEventListener('dragover', ev => {
+  if (dragFrom === null) return;
   const card = ev.target.closest('.card');
-  if (!card || dragFrom === null) return;
+  const head = ev.target.closest('.ghead');
+  if (!card && !head) return;
   ev.preventDefault();
-  document.querySelectorAll('.dropline').forEach(c => c.classList.remove('dropline'));
-  card.classList.add('dropline');
+  clearMarks();
+  if (card) card.classList.add(isAfter(ev, card) ? 'dropline-b' : 'dropline');
+  else head.classList.add('drophead');
 });
 $('list').addEventListener('drop', ev => {
+  if (dragFrom === null) return;
   const card = ev.target.closest('.card');
-  if (!card || dragFrom === null) return;
+  const head = ev.target.closest('.ghead');
+  if (!card && !head) return;
   ev.preventDefault();
-  move(dragFrom, +card.dataset.i);
+  const from = dragFrom; dragFrom = null; clearMarks();
+  if (card) {
+    const g = card.parentElement.dataset.g;
+    const before = isAfter(ev, card)
+      ? (card.nextElementSibling ? +card.nextElementSibling.dataset.i : null)
+      : +card.dataset.i;
+    moveTo(from, g, before);
+  } else {
+    moveTo(from, head.dataset.g, firstIndexOf(head.dataset.g));
+  }
 });
 
 $('search').addEventListener('input', render);
@@ -365,7 +468,9 @@ $('editOk').addEventListener('click', () => {
     set('match', lines('fMatch'));
   }
 
+  const order = groupOrder();
   if (editIndex >= 0) doc.channels[editIndex] = e; else doc.channels.push(e);
+  normalize(order);
   $('editModal').classList.add('hidden');
   markDirty(); render();
 });
