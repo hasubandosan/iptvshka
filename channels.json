@@ -230,6 +230,13 @@
       "group": "Музыка"
     },
     {
+      "name": "Bridge Classic",
+      "match": [
+        "Bridge Classic"
+      ],
+      "group": "Музыка"
+    },
+    {
       "name": "Retro Plus 2",
       "match": [
         "Retro Plus 2"
@@ -240,13 +247,6 @@
       "name": "DanceHits80",
       "match": [
         "DanceHits80"
-      ],
-      "group": "Музыка"
-    },
-    {
-      "name": "Bridge Classic",
-      "match": [
-        "Bridge Classic"
       ],
       "group": "Музыка"
     },
@@ -287,9 +287,9 @@
       "group": "Музыка"
     },
     {
-      "name": "baraza",
+      "name": "Baraza TV Relaxing",
       "match": [
-        "baraza"
+        "Baraza TV Relaxing"
       ],
       "group": "Музыка"
     },
