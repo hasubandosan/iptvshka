@@ -119,13 +119,13 @@
     {
       "name": "Bridge TV",
       "match": [
-        "Bridge TV"
+        "Bridge"
       ]
     },
     {
       "name": "Bridge Deluxe",
       "match": [
-        "Bridge Deluxe HD"
+        "Bridge Deluxe"
       ]
     },
     {
@@ -266,6 +266,134 @@
       "name": "Рыбалка",
       "match": [
         "Рыбалка"
+      ]
+    },
+    {
+      "name": "1HD Music",
+      "group": "Музыка",
+      "match": [
+        "1HD Music"
+      ]
+    },
+    {
+      "name": "Bridge Classic",
+      "match": [
+        "Bridge Classic"
+      ]
+    },
+    {
+      "name": "Deluxe Rap",
+      "match": [
+        "Deluxe Rap"
+      ]
+    },
+    {
+      "name": "Europa Plus",
+      "match": [
+        "Europa Plus"
+      ]
+    },
+    {
+      "name": "Radio M2O",
+      "match": [
+        "Radio M2O",
+        "RadioM2O"
+      ]
+    },
+    {
+      "name": "kronehit",
+      "match": [
+        "kronehit"
+      ]
+    },
+    {
+      "name": "baraza",
+      "match": [
+        "baraza"
+      ]
+    },
+    {
+      "name": "ТНТ Music HD",
+      "match": [
+        "ТНТ Music HD",
+        "Fon Music",
+        "FonMusic"
+      ]
+    },
+    {
+      "name": "Шансон ТВ",
+      "match": [
+        "Шансон ТВ",
+        "Shanson"
+      ]
+    },
+    {
+      "name": "Россия 24",
+      "match": [
+        "Россия 24",
+        "Russia 24",
+        "Rossiya 24"
+      ]
+    },
+    {
+      "name": "НТВ",
+      "match": [
+        "НТВ",
+        "NTV"
+      ]
+    },
+    {
+      "name": "ТВЦ",
+      "match": [
+        "ТВЦ"
+      ]
+    },
+    {
+      "name": "Первый музыкальный BY",
+      "match": [
+        "Первый музыкальный BY"
+      ]
+    },
+    {
+      "name": "Первый музыкальный BY HD",
+      "match": [
+        "Первый музыкальный BY HD"
+      ]
+    },
+    {
+      "name": "Радость моя",
+      "match": [
+        "Радость моя"
+      ]
+    },
+    {
+      "name": "DanceHits80",
+      "match": [
+        "DanceHits80"
+      ]
+    },
+    {
+      "name": "Неизвестная планета",
+      "match": [
+        "Неизвестная планета"
+      ]
+    },
+    {
+      "name": "Загородная жизнь",
+      "match": [
+        "Загородная жизнь"
+      ]
+    },
+    {
+      "name": "Мужской",
+      "match": [
+        "Мужской"
+      ]
+    },
+    {
+      "name": "Охотник и рыболов",
+      "match": [
+        "Охотник и рыболов"
       ]
     }
   ]
