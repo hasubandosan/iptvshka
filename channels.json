@@ -488,11 +488,47 @@
       "group": "Фильмы"
     },
     {
+      "name": "Киномикс",
+      "match": [
+        "Киномикс"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "Кино ТВ HD",
+      "match": [
+        "KINO TV HD"
+      ],
+      "group": "Фильмы"
+    },
+    {
       "name": "Кинохит HD",
       "match": [
         "Кинохит"
       ],
       "group": "Фильмы"
+    },
+    {
+      "name": "Кинопоказ",
+      "group": "Фильмы",
+      "match": [
+        "Кинопоказ"
+      ]
+    },
+    {
+      "name": "Kinosemja",
+      "group": "Фильмы",
+      "match": [
+        "Kinosemja",
+        "Киносемья"
+      ]
+    },
+    {
+      "name": "Kinopokaz",
+      "group": "Фильмы",
+      "match": [
+        "Kinopokaz"
+      ]
     },
     {
       "name": "TV1000 Action",
@@ -548,34 +584,6 @@
       "group": "Фильмы",
       "match": [
         "TV 21 International"
-      ]
-    },
-    {
-      "name": "Кино ТВ HD",
-      "match": [
-        "KINO TV HD"
-      ],
-      "group": "Фильмы"
-    },
-    {
-      "name": "Киномикс",
-      "match": [
-        "Киномикс"
-      ],
-      "group": "Фильмы"
-    },
-    {
-      "name": "Кинохит",
-      "match": [
-        "Кинохит"
-      ],
-      "group": "Фильмы"
-    },
-    {
-      "name": "Кинопоказ",
-      "group": "Фильмы",
-      "match": [
-        "Кинопоказ"
       ]
     },
     {
@@ -646,21 +654,6 @@
       "group": "Фильмы",
       "match": [
         "Kino TV"
-      ]
-    },
-    {
-      "name": "Kinopokaz",
-      "group": "Фильмы",
-      "match": [
-        "Kinopokaz"
-      ]
-    },
-    {
-      "name": "Kinosemja",
-      "group": "Фильмы",
-      "match": [
-        "Kinosemja",
-        "Киносемья"
       ]
     },
     {
@@ -742,17 +735,10 @@
       ]
     },
     {
-      "name": "Bolt Russia",
+      "name": "Bolt Ukraine",
       "group": "Фильмы",
       "match": [
-        "Bolt Russia"
-      ]
-    },
-    {
-      "name": "Nashe HD",
-      "group": "Фильмы",
-      "match": [
-        "Nashe HD"
+        "Bolt (Ukraine)"
       ]
     },
     {
