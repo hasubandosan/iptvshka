@@ -1,6 +1,14 @@
 {
   "channels": [
     {
+      "name": "Первый",
+      "match": [
+        "Первый Канал",
+        "Perviy"
+      ],
+      "group": "Общее"
+    },
+    {
       "name": "Россия 1",
       "match": [
         "Россия 1"
@@ -33,6 +41,21 @@
       "group": "Общее"
     },
     {
+      "name": "НТВ",
+      "match": [
+        "НТВ",
+        "NTV"
+      ],
+      "group": "Общее"
+    },
+    {
+      "name": "ТВЦ",
+      "match": [
+        "ТВЦ"
+      ],
+      "group": "Общее"
+    },
+    {
       "name": "Пятница!",
       "match": [
         "Пятница!"
@@ -44,14 +67,94 @@
       "match": [
         "Матч ТВ"
       ],
-      "group": "Основной"
+      "group": "Общее"
     },
     {
       "name": "Матч! Футбол 1",
       "match": [
         "Матч! Футбол 1"
       ],
-      "group": "Основной"
+      "group": "Общее"
+    },
+    {
+      "name": "Матч! Футбол 2",
+      "match": [
+        "Матч! Футбол 2"
+      ],
+      "group": "Общее"
+    },
+    {
+      "name": "Матч! Футбол 3",
+      "match": [
+        "Матч! Футбол 3"
+      ],
+      "group": "Общее"
+    },
+    {
+      "name": "Россия 24",
+      "match": [
+        "Россия 24",
+        "Russia 24",
+        "Rossiya 24"
+      ],
+      "group": "Общее"
+    },
+    {
+      "name": "Охотник и рыболов",
+      "match": [
+        "Охотник и рыболов"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Мужской",
+      "match": [
+        "Мужской"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Неизвестная планета",
+      "match": [
+        "Неизвестная планета"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Рыбалка",
+      "match": [
+        "Рыбалка"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Загородная жизнь",
+      "match": [
+        "Загородная жизнь"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Animal Planet",
+      "match": [
+        "Animal Planet"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "National Geographic",
+      "match": [
+        "National Geographic",
+        "Nat Geo"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "Моя Планета",
+      "match": [
+        "Моя Планета"
+      ],
+      "group": "Познавательные"
     },
     {
       "name": "Рыбалка и охота",
@@ -61,7 +164,7 @@
         "Okhota i rybalka",
         "Rybalka i okhota"
       ],
-      "group": "Познавательное",
+      "group": "Познавательные",
       "logo": "https://tele100.ru/wp-content/uploads/2018/11/OXOTA_Logo.png"
     },
     {
@@ -72,26 +175,6 @@
       ]
     },
     {
-      "name": "Первый",
-      "match": [
-        "Первый Канал",
-        "Perviy"
-      ]
-    },
-    {
-      "name": "Animal Planet",
-      "match": [
-        "Animal Planet"
-      ]
-    },
-    {
-      "name": "National Geographic",
-      "match": [
-        "National Geographic",
-        "Nat Geo"
-      ]
-    },
-    {
       "name": "Discovery Channel",
       "group": "Познавательные",
       "match": [
@@ -99,22 +182,113 @@
       ]
     },
     {
-      "name": "Моя Планета",
+      "name": "Bridge TV",
       "match": [
-        "Моя Планета"
-      ]
+        "Bridge"
+      ],
+      "group": "Музыка"
     },
     {
-      "name": "Setanta Sports 2",
+      "name": "Bridge Deluxe",
       "match": [
-        "Setanta Sports 2"
-      ]
+        "Bridge Deluxe"
+      ],
+      "group": "Музыка"
     },
     {
-      "name": "Setanta Sports",
+      "name": "Retro Plus 2",
       "match": [
-        "Setanta Sports 1"
-      ]
+        "Retro Plus 2"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "DanceHits80",
+      "match": [
+        "DanceHits80"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Bridge Classic",
+      "match": [
+        "Bridge Classic"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "MTV 90s",
+      "match": [
+        "MTV 90s"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Deluxe Rap",
+      "match": [
+        "Deluxe Rap"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Europa Plus",
+      "match": [
+        "Europa Plus"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Radio M2O",
+      "match": [
+        "Radio M2O",
+        "RadioM2O"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "kronehit",
+      "match": [
+        "kronehit"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "baraza",
+      "match": [
+        "baraza"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "ТНТ Music HD",
+      "match": [
+        "ТНТ Music HD",
+        "Fon Music",
+        "FonMusic"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Шансон ТВ",
+      "match": [
+        "Шансон ТВ",
+        "Shanson"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Первый музыкальный BY",
+      "match": [
+        "Первый музыкальный BY"
+      ],
+      "group": "Музыка"
+    },
+    {
+      "name": "Первый музыкальный BY HD",
+      "match": [
+        "Первый музыкальный BY HD"
+      ],
+      "group": "Музыка"
     },
     {
       "name": "Муз ТВ",
@@ -124,64 +298,25 @@
       ]
     },
     {
-      "name": "Bridge TV",
+      "name": "1HD Music",
+      "group": "Музыка",
       "match": [
-        "Bridge"
+        "1HD Music"
       ]
     },
     {
-      "name": "Bridge Deluxe",
+      "name": "Baraza",
+      "group": "Музыка",
       "match": [
-        "Bridge Deluxe"
+        "Baraza"
       ]
     },
     {
-      "name": "Retro Plus 2",
+      "name": "Penthouse Passion",
       "match": [
-        "Retro Plus 2"
-      ]
-    },
-    {
-      "name": "Карусель",
-      "match": [
-        "Карусель"
-      ]
-    },
-    {
-      "name": "Мульт",
-      "match": [
-        "Мульт"
-      ]
-    },
-    {
-      "name": "Disney Солнце",
-      "match": [
-        "Солнце"
-      ]
-    },
-    {
-      "name": "Cartoon Network",
-      "match": [
-        "Cartoon Network"
-      ]
-    },
-    {
-      "name": "Nickelodeon",
-      "match": [
-        "Nickelodeon"
-      ]
-    },
-    {
-      "name": "AnimeTV",
-      "match": [
-        "Anime"
-      ]
-    },
-    {
-      "name": "2x2",
-      "match": [
-        "2x2"
-      ]
+        "Penthouse Passion"
+      ],
+      "group": "Adults"
     },
     {
       "name": "RedTraffic",
@@ -195,212 +330,6 @@
       "group": "Adults",
       "match": [
         "Hustler"
-      ]
-    },
-    {
-      "name": "Кинопремьера HD",
-      "match": [
-        "Кинопремьера"
-      ]
-    },
-    {
-      "name": "Кинохит HD",
-      "match": [
-        "Кинохит"
-      ]
-    },
-    {
-      "name": "viju TV1000",
-      "match": [
-        "viju TV1000"
-      ]
-    },
-    {
-      "name": "TV1000 Action",
-      "match": [
-        "TV1000 Action"
-      ]
-    },
-    {
-      "name": "Кино ТВ HD",
-      "match": [
-        "Кино ТВ HD"
-      ]
-    },
-    {
-      "name": "Матч! Футбол 2",
-      "match": [
-        "Матч! Футбол 2"
-      ]
-    },
-    {
-      "name": "Матч! Футбол 3",
-      "match": [
-        "Матч! Футбол 3"
-      ]
-    },
-    {
-      "name": "Матч! Футбол Резерв",
-      "match": [
-        "Матч! Футбол"
-      ]
-    },
-    {
-      "name": "MTV 90s",
-      "match": [
-        "MTV 90s"
-      ]
-    },
-    {
-      "name": "Fan",
-      "match": [
-        "Fan"
-      ]
-    },
-    {
-      "name": "Киномикс",
-      "match": [
-        "Киномикс"
-      ]
-    },
-    {
-      "name": "Кинохит",
-      "match": [
-        "Кинохит"
-      ]
-    },
-    {
-      "name": "Рыбалка",
-      "match": [
-        "Рыбалка"
-      ]
-    },
-    {
-      "name": "1HD Music",
-      "group": "Музыка",
-      "match": [
-        "1HD Music"
-      ]
-    },
-    {
-      "name": "Bridge Classic",
-      "match": [
-        "Bridge Classic"
-      ]
-    },
-    {
-      "name": "Deluxe Rap",
-      "match": [
-        "Deluxe Rap"
-      ]
-    },
-    {
-      "name": "Europa Plus",
-      "match": [
-        "Europa Plus"
-      ]
-    },
-    {
-      "name": "Radio M2O",
-      "match": [
-        "Radio M2O",
-        "RadioM2O"
-      ]
-    },
-    {
-      "name": "kronehit",
-      "match": [
-        "kronehit"
-      ]
-    },
-    {
-      "name": "baraza",
-      "match": [
-        "baraza"
-      ]
-    },
-    {
-      "name": "ТНТ Music HD",
-      "match": [
-        "ТНТ Music HD",
-        "Fon Music",
-        "FonMusic"
-      ]
-    },
-    {
-      "name": "Шансон ТВ",
-      "match": [
-        "Шансон ТВ",
-        "Shanson"
-      ]
-    },
-    {
-      "name": "Россия 24",
-      "match": [
-        "Россия 24",
-        "Russia 24",
-        "Rossiya 24"
-      ]
-    },
-    {
-      "name": "НТВ",
-      "match": [
-        "НТВ",
-        "NTV"
-      ]
-    },
-    {
-      "name": "ТВЦ",
-      "match": [
-        "ТВЦ"
-      ]
-    },
-    {
-      "name": "Первый музыкальный BY",
-      "match": [
-        "Первый музыкальный BY"
-      ]
-    },
-    {
-      "name": "Первый музыкальный BY HD",
-      "match": [
-        "Первый музыкальный BY HD"
-      ]
-    },
-    {
-      "name": "Радость моя",
-      "match": [
-        "Радость моя"
-      ]
-    },
-    {
-      "name": "DanceHits80",
-      "match": [
-        "DanceHits80"
-      ]
-    },
-    {
-      "name": "Неизвестная планета",
-      "match": [
-        "Неизвестная планета"
-      ]
-    },
-    {
-      "name": "Загородная жизнь",
-      "match": [
-        "Загородная жизнь"
-      ]
-    },
-    {
-      "name": "Мужской",
-      "match": [
-        "Мужской"
-      ]
-    },
-    {
-      "name": "Охотник и рыболов",
-      "match": [
-        "Охотник и рыболов"
       ]
     },
     {
@@ -523,17 +452,60 @@
       ]
     },
     {
-      "name": "Penthouse Passion",
-      "match": [
-        "Penthouse Passion"
-      ]
-    },
-    {
       "name": "Reality Kings",
       "group": "Adults",
       "match": [
         "Reality Kings"
       ]
+    },
+    {
+      "name": "Кинопремьера HD",
+      "match": [
+        "Кинопремьера"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "Кинохит HD",
+      "match": [
+        "Кинохит"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "TV1000 Action",
+      "match": [
+        "TV1000 Action"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "Кино ТВ HD",
+      "match": [
+        "Кино ТВ HD"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "viju TV1000",
+      "match": [
+        "viju TV1000"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "Киномикс",
+      "match": [
+        "Киномикс"
+      ],
+      "group": "Фильмы"
+    },
+    {
+      "name": "Кинохит",
+      "match": [
+        "Кинохит"
+      ],
+      "group": "Фильмы"
     },
     {
       "name": "Кинопоказ",
@@ -550,13 +522,6 @@
       ]
     },
     {
-      "name": "Baraza",
-      "group": "Музыка",
-      "match": [
-        "Baraza"
-      ]
-    },
-    {
       "name": "Мосфильм",
       "group": "Фильмы",
       "match": [
@@ -569,6 +534,83 @@
       "match": [
         "Мужское кино"
       ]
+    },
+    {
+      "name": "Setanta Sports",
+      "match": [
+        "Setanta Sports 1"
+      ],
+      "group": "Спорт"
+    },
+    {
+      "name": "Матч! Футбол Резерв",
+      "match": [
+        "Матч! Футбол"
+      ],
+      "group": "Спорт"
+    },
+    {
+      "name": "Setanta Sports 2",
+      "match": [
+        "Setanta Sports 2"
+      ],
+      "group": "Спорт"
+    },
+    {
+      "name": "Карусель",
+      "match": [
+        "Карусель"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "Мульт",
+      "match": [
+        "Мульт"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "Disney Солнце",
+      "match": [
+        "Солнце"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "Радость моя",
+      "match": [
+        "Радость моя"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "Cartoon Network",
+      "match": [
+        "Cartoon Network"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "Nickelodeon",
+      "match": [
+        "Nickelodeon"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "2x2",
+      "match": [
+        "2x2"
+      ],
+      "group": "Детские"
+    },
+    {
+      "name": "AnimeTV",
+      "match": [
+        "Anime"
+      ],
+      "group": "Детские"
     }
   ]
 }
