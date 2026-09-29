@@ -106,6 +106,34 @@
       "group": "Общее"
     },
     {
+      "name": "viju+ Planet",
+      "match": [
+        "viju+ Planet"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "viju Nature",
+      "match": [
+        "viju Nature"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "viju History",
+      "match": [
+        "viju History"
+      ],
+      "group": "Познавательные"
+    },
+    {
+      "name": "viju Explore",
+      "match": [
+        "viju Explore"
+      ],
+      "group": "Познавательные"
+    },
+    {
       "name": "Охотник и рыболов",
       "match": [
         "Охотник и рыболов"
@@ -474,16 +502,58 @@
       "group": "Фильмы"
     },
     {
-      "name": "Кино ТВ HD",
+      "name": "viju TV1000",
       "match": [
-        "KINO TV HD"
+        "viju TV1000"
       ],
       "group": "Фильмы"
     },
     {
-      "name": "viju TV1000",
+      "name": "viju TV1000 Comedy",
+      "group": "Фильмы",
       "match": [
-        "viju TV1000"
+        "viju+ Comedy"
+      ]
+    },
+    {
+      "name": "viju TV1000 Action",
+      "group": "Фильмы",
+      "match": [
+        "viju TV1000 Action"
+      ]
+    },
+    {
+      "name": "viju TV1000 Premiera",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Premiere"
+      ]
+    },
+    {
+      "name": "viju TV1000 Megahit",
+      "group": "Фильмы",
+      "match": [
+        "viju+ Megahit"
+      ]
+    },
+    {
+      "name": "viju TV1000 Russkoe",
+      "group": "Фильмы",
+      "match": [
+        "viju TV1000 Russkoe"
+      ]
+    },
+    {
+      "name": "TV 21 International",
+      "group": "Фильмы",
+      "match": [
+        "TV 21 International"
+      ]
+    },
+    {
+      "name": "Кино ТВ HD",
+      "match": [
+        "KINO TV HD"
       ],
       "group": "Фильмы"
     },
@@ -612,7 +682,7 @@
       "name": "Премиальное",
       "group": "Фильмы",
       "match": [
-        "Премиальное"
+        "Premialnoe"
       ]
     },
     {
@@ -623,59 +693,24 @@
       ]
     },
     {
-      "name": "Русский бестселлер",
+      "name": "Русский Бестселлер",
       "group": "Фильмы",
       "match": [
-        "Русский бестселлер"
+        "Russkiy Bestseller"
       ]
     },
     {
       "name": "Русский Детектив",
       "group": "Фильмы",
       "match": [
-        "Русский Детектив"
+        "Russkiy Detektiv"
       ]
     },
     {
       "name": "Русский Иллюзия",
       "group": "Фильмы",
       "match": [
-        "Русский Иллюзия"
-      ]
-    },
-    {
-      "name": "TV 21 International",
-      "group": "Фильмы",
-      "match": [
-        "TV 21 International"
-      ]
-    },
-    {
-      "name": "viju+ Russkoe",
-      "group": "Фильмы",
-      "match": [
-        "viju+ Russkoe"
-      ]
-    },
-    {
-      "name": "viju+ Action",
-      "group": "Фильмы",
-      "match": [
-        "viju+ Action"
-      ]
-    },
-    {
-      "name": "viju+ Megahit",
-      "group": "Фильмы",
-      "match": [
-        "viju+ Megahit"
-      ]
-    },
-    {
-      "name": "viju+ Premiera",
-      "group": "Фильмы",
-      "match": [
-        "viju+ Premiera"
+        "Russkiy Illusion"
       ]
     },
     {
@@ -700,13 +735,6 @@
       ]
     },
     {
-      "name": "viju+ Comedy",
-      "group": "Фильмы",
-      "match": [
-        "viju+ Comedy"
-      ]
-    },
-    {
       "name": "Amedia Hit",
       "group": "Фильмы",
       "match": [
@@ -726,6 +754,13 @@
       "match": [
         "Nashe HD"
       ]
+    },
+    {
+      "name": "viju+ Sport",
+      "match": [
+        "viju+ Sport"
+      ],
+      "group": "Спорт"
     },
     {
       "name": "Setanta Sports",
