@@ -65,3 +65,9 @@ http://185.57.68.33:80/110/index.m3u8
 http://141.95.55.143/CH3839/index.m3u8
 #EXTINF:-1 tvg-id="CanalInfantil.us@SD" tvg-logo="https://i.imgur.com/WGk7MJ3.png" group-title="Kids",Fan
 http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/canalinfantil/playlist.m3u8
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Киномикс HD.png" group-title="Aggregator - Rafail1982 / CINERAMA",Киномикс
+https://stream8.cinerama.uz/1233/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Кинохит.png" group-title="Aggregator - Rafail1982 / CINERAMA",Кинохит
+https://stream8.cinerama.uz/1055/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-logo="https://iptvx.one/picons/oxota-i-rybalka.png" group-title="Aggregator - Axenov / Хобби и увлечения",Рыбалка
+https://stream8.cinerama.uz/1038/tracks-v1a1/mono.m3u8
