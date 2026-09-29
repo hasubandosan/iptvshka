@@ -25,6 +25,8 @@ http://141.95.55.143/CH3839/index.m3u8
 http://185.57.68.33:80/110/index.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Общее",Россия 24
 http://91.210.192.13:1000/russia-24
+#EXTINF:-1 tvg-id="KVNTV.ru@SD" tvg-logo="https://i.imgur.com/Vw3LFLX.png" group-title="Общее",KVN TV
+http://178.124.179.122:8080/KVN-TV/index.m3u8
 #EXTINF:-1 tvg-id="oxotnik-i-rybolov" tvg-logo="https://iptvx.one/picons/oxotnik-i-rybolov.png" group-title="Познавательные",Охотник и рыболов
 https://bl.rutube.ru/livestream/1da5d92af8c55b16241f1eb12a27f00c/index.m3u8?s=QzqPo5cuxaeOJDvPy-nBvg&e=2070623488&scheme=https
 #EXTINF:-1 tvg-id="muzhskoy" tvg-logo="https://iptvx.one/picons/muzhskoy.png" group-title="Познавательные",Мужской
@@ -88,10 +90,42 @@ https://stream8.cinerama.uz/1233/tracks-v1a1/mono.m3u8
 https://stream8.cinerama.uz/1055/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Фильмы",Кинопоказ
 https://stream8.cinerama.uz/1057/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Кинопремьера HD.png" group-title="Фильмы",Кинопремьера
-https://s04.watcher.uz/5/video.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFjdF9pZCI6MjcwMTc3LCJsb2dpbiI6InR2LTI3MDE3NyIsInRlbXBvcmFyeSI6ZmFsc2UsImlzX29hdXRoIjpmYWxzZSwiY3JlYXRlZF90aW1lIjoxNjUwMjgzMDI3fQ.LadLj4b6plIxTGCWntQQqsQGZ3R9EsvwhaXQd1sur2g%3A15
+#EXTINF:-1 tvg-id="domkino" tvg-logo="https://iptvx.one/picons/domkino.png" group-title="Фильмы",Дом Кино
+https://streaming.televizor-24-tochka.ru/live/44.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Фильмы",Мужское кино
 https://stream8.cinerama.uz/1237/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="evrokino" tvg-logo="https://iptvx.one/picons/eurokino.png" group-title="Фильмы",Еврокино
+http://176.118.197.101/Evrokino/index.m3u8
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Кино 1 International.png" group-title="Фильмы",Кино 1 International
+https://kino-1.catcast.tv/content/38617/index.m3u8?cur=tva.org.ua&key=3i277
+#EXTINF:-1 tvg-id="Kino1.ru@International" tvg-logo="https://i.imgur.com/zsCPLs4.png" group-title="Фильмы",Kino 1
+http://kino-1.catcast.tv/content/38617/index.m3u8
+#EXTINF:-1 tvg-id="Kino2.ua@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/uk/3/35/KINO_2_UA.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" group-title="Фильмы",Kino 2
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+http://stream.mcquack.net/465/index.m3u8
+#EXTINF:-1 tvg-id="KinoTV.ru@HD" tvg-logo="https://i.imgur.com/sMpamNO.png" group-title="Фильмы",Kino TV
+http://176.118.197.101/KinoTvHD/playlist.m3u8
+#EXTINF:-1 tvg-id="Kinopokaz.ru@SD" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Фильмы",Kinopokaz
+http://stream.mcquack.net/64/index.m3u8
+#EXTINF:-1 tvg-id="Kinosemja.ru@SD" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Фильмы",Kinosemja
+http://stream.mcquack.net/170/index.m3u8
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Родное Кино.png" group-title="Фильмы",Родное кино
+https://s05.watcher.uz/45/video.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250cmFjdF9pZCI6MjcwMTc3LCJsb2dpbiI6InR2LTI3MDE3NyIsInRlbXBvcmFyeSI6ZmFsc2UsImlzX29hdXRoIjpmYWxzZSwiY3JlYXRlZF90aW1lIjoxNjUwMjgzMDI3fQ.LadLj4b6plIxTGCWntQQqsQGZ3R9EsvwhaXQd1sur2g%3A15
+#EXTINF:-1 tvg-id="TV21International.ru@SD" tvg-logo="https://ibb.co/BH6CZx3K" group-title="Фильмы",TV 21 International
+http://stream.mcquack.net/152/index.m3u8
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Фильмы",viju+ Megahit
+http://185.46.16.239:8000/VIP_Megahit
+#EXTINF:-1 tvg-id="YesMoviesAction.il@SD" tvg-logo="https://i.imgur.com/Bgz7p5F.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" group-title="Фильмы",Yes Movies Action
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+http://stream.mcquack.net/380/index.m3u8
+#EXTINF:-1 tvg-id="Komedia.ru@SD" tvg-logo="https://i.imgur.com/VRC5juh.png" group-title="Фильмы",Komedia
+http://stream.mcquack.net/68/index.m3u8
+#EXTINF:-1 tvg-id="Komediynoe.ru@HD" tvg-logo="https://i.imgur.com/cEKe8XC.png" group-title="Фильмы",Komediynoe HD
+http://stream.mcquack.net/74/index.m3u8
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Фильмы",viju+ Comedy
+http://185.46.16.239:8000/VIP_Comedy
+#EXTINF:-1 tvg-id="AmediaHit.ru@SD" tvg-logo="https://i.imgur.com/a8ZBGBw.png" group-title="Фильмы",Amedia Hit
+http://stream.mcquack.net/162/index.m3u8
 #EXTINF:-1 tvg-id="SetantaSports1.ru@HD" tvg-logo="https://i.imgur.com/8ANUZAu.png" group-title="Спорт",Setanta Sports
 https://fs.uplink.kz/setanta_sports_1_hd/mono.m3u8?token=onlinetv
 #EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Матч! Футбол 2 HD.png" group-title="Спорт",Матч! Футбол Резерв
