@@ -341,6 +341,20 @@
       ]
     },
     {
+      "name": "Music Box Gold",
+      "group": "Музыка",
+      "match": [
+        "Music Box Gold"
+      ]
+    },
+    {
+      "name": "Music Box Russian",
+      "match": [
+        "Music Box Russian"
+      ],
+      "group": "Музыка"
+    },
+    {
       "name": "Penthouse Passion HD",
       "match": [
         "Penthouse Passion HD"
