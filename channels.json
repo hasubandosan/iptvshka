@@ -344,13 +344,15 @@
       "name": "Music Box Gold",
       "group": "Музыка",
       "match": [
-        "Music Box Gold"
+        "Music Box Gold",
+        "Musicbox Gold"
       ]
     },
     {
       "name": "Music Box Russian",
       "match": [
-        "Music Box Russian"
+        "Music Box Russian",
+        "MusicBox Russian"
       ],
       "group": "Музыка"
     },
