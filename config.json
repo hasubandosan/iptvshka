@@ -6,7 +6,8 @@
     "https://m3u.su/tru",
     "https://iptv-org.github.io/iptv/index.m3u",
     "https://m3u.su/kk2",
-    "https://raw.githubusercontent.com/IPTVRU2026/IPTVMIR/main/IPTV_MEGA_PLAYLIST.m3u"
+    "https://raw.githubusercontent.com/IPTVRU2026/IPTVMIR/main/IPTV_MEGA_PLAYLIST.m3u",
+    "https://raw.githubusercontent.com/MaximKiselev/iptv/main/playlist.m3u"
   ],
   "blocked": [
     "zabava-htlive.cdn.ngenix.net",
