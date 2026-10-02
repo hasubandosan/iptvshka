@@ -5,7 +5,8 @@
       "match": [
         "Первый Канал HD"
       ],
-      "group": "Общее"
+      "group": "Общее",
+      "logo": "https://tv.ucoz.club/i/1.png"
     },
     {
       "name": "Россия 1",
@@ -132,7 +133,8 @@
       "match": [
         "Неизвестная планета"
       ],
-      "group": "Познавательные"
+      "group": "Познавательные",
+      "logo": "https://market.aiui.ru/static/new2/img/logo/Unknown%20Planet%20TV%20logo.png"
     },
     {
       "name": "Охота и Рыбалка",
