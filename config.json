@@ -41,5 +41,16 @@
     "strict_hls": true,
     "keep_non_http": true,
     "user_agent": "Mozilla/5.0 (compatible; IPTV-Updater/1.0)"
+  },
+    "speed": {
+    "enabled": true,
+    "rank_by": "speed",
+    "min_ratio": 1.3,
+    "tolerance": 0.15,
+    "max_probe": 4,
+    "segments": 2,
+    "timeout": 10,
+    "concurrency": 3,
+    "max_variant_mbps": 8
   }
 }
