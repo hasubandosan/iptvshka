@@ -534,6 +534,20 @@
       "group": "Фильмы"
     },
     {
+      "name": "Мужское кино",
+      "group": "Фильмы",
+      "match": [
+        "Мужское кино"
+      ]
+    },
+    {
+      "name": "Родное кино",
+      "group": "Фильмы",
+      "match": [
+        "Родное кино"
+      ]
+    },
+    {
       "name": "Kinosemja",
       "group": "Фильмы",
       "match": [
@@ -549,30 +563,10 @@
       ]
     },
     {
-      "name": "Мужское кино",
-      "group": "Фильмы",
-      "match": [
-        "Мужское кино"
-      ]
-    },
-    {
-      "name": "Родное кино",
-      "group": "Фильмы",
-      "match": [
-        "Родное кино"
-      ]
-    },
-    {
-      "name": "TV1000 Action",
-      "match": [
-        "TV1000 Action"
-      ],
-      "group": "Фильмы"
-    },
-    {
       "name": "viju TV1000",
       "match": [
-        "viju TV1000"
+        "=viju TV1000",
+        "=viju TV1000 HD"
       ],
       "group": "Фильмы"
     },
@@ -587,7 +581,7 @@
       "name": "viju TV1000 Action",
       "group": "Фильмы",
       "match": [
-        "viju TV1000 Action"
+        "TV1000 Action"
       ]
     },
     {
