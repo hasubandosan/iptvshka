@@ -19,10 +19,6 @@ https://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221.smil/playlist.m3u8
 https://vod.tuva.ru/friday/index.m3u8
 #EXTINF:-1 tvg-logo="https://beachsoccer.com/wp-content/uploads/2021/08/MATCH-TV.png" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Общее",Матч ТВ
 http://tv.tuva.ru/machtv/index.m3u8
-#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Матч! Футбол 2 HD.png" group-title="Общее",Матч! Футбол 2
-http://141.95.55.143/CH3839/index.m3u8
-#EXTINF:-1 group-title="Общее",Матч! Футбол 3
-http://185.57.68.33/110/mpegts
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Общее",Россия 24
 http://91.210.192.13:1000/russia-24
 #EXTINF:-1 tvg-id="KVNTV.ru@SD" tvg-logo="https://i.imgur.com/Vw3LFLX.png" group-title="Общее",KVN TV
@@ -41,7 +37,7 @@ https://bl.rutube.ru/livestream/1da5d92af8c55b16241f1eb12a27f00c/index.m3u8?s=Qz
 https://flussonic.mkpnet.ru/tv-55c94e838b306657/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="neizvestnaya-planeta" tvg-logo="https://iptvx.one/picons/neizvestnaya-planeta.png" group-title="Познавательные",Неизвестная планета
 http://stitch.teletarget.ru/api/v1/hls/vintera/neplaneta/index.m3u8
-#EXTINF:-1 tvg-logo="https://iptvx.one/picons/oxota-i-rybalka.png" group-title="Познавательные",Рыбалка
+#EXTINF:-1 tvg-logo="https://tele100.ru/wp-content/uploads/2018/11/OXOTA_Logo.png" group-title="Познавательные",Охота и Рыбалка
 https://stream8.cinerama.uz/1038/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="zagorodnaya-zhizn" tvg-logo="https://iptvx.one/picons/zagorodnaya-zhizn.png" group-title="Познавательные",Загородная жизнь
 http://185.57.68.33/40/index.m3u8
@@ -49,8 +45,6 @@ http://185.57.68.33/40/index.m3u8
 https://stream8.cinerama.uz/1041/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="https://iptvx.one/picons/moya-planeta.png" group-title="Познавательные",Моя Планета
 http://vod.tuva.ru/myplanet/index.m3u8
-#EXTINF:-1 tvg-logo="https://tele100.ru/wp-content/uploads/2018/11/OXOTA_Logo.png" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Познавательные",Рыбалка и охота
-http://188.113.190.15/75/tracks-v1a1/index.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Познавательные",Дикая рыбалка
 http://188.113.190.15/69/tracks-v1a1/index.m3u8
 #EXTINF:-1 tvg-id="BRIDGE.ru@SD" tvg-logo="https://i.imgur.com/qYObfrG.png" group-title="Музыка",Bridge TV
@@ -161,6 +155,10 @@ http://stream.mcquack.net/162/index.m3u8
 #EXTINF:-1 tvg-id="Bolt.ua@SD" tvg-logo="https://i.imgur.com/YdIHXOR.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" group-title="Фильмы",Bolt Ukraine
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
 http://stream.mcquack.net/73/index.m3u8
+#EXTINF:-1 group-title="Спорт",Матч! Футбол 3
+http://185.57.68.33/110/mpegts
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Матч! Футбол 2 HD.png" group-title="Спорт",Матч! Футбол 2
+http://141.95.55.143/CH3839/index.m3u8
 #EXTINF:-1 tvg-logo="https://iptvx.one/picons/viasat-sport.png" group-title="Спорт",viju+ Sport
 http://178.134.1.158:8081/viasatsport/index.m3u8
 #EXTINF:-1 tvg-id="SetantaSports1.ru@HD" tvg-logo="https://i.imgur.com/8ANUZAu.png" group-title="Спорт",Setanta Sports
