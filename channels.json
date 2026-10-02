@@ -634,7 +634,7 @@
       "name": "Kino 1",
       "group": "Фильмы",
       "match": [
-        "Kino 1"
+        "Kino 1 (Ukraine)"
       ]
     },
     {
@@ -761,13 +761,6 @@
       "name": "Setanta Sports",
       "match": [
         "Setanta Sports 1"
-      ],
-      "group": "Спорт"
-    },
-    {
-      "name": "Матч! Футбол Резерв",
-      "match": [
-        "Матч! Футбол"
       ],
       "group": "Спорт"
     },
