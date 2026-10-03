@@ -7,9 +7,9 @@ https://stream.smotrim.ru/hls2/russia_hd/playlist_6.m3u8
 https://tsv.md/stream/hls/tsv-online/index.m3u8
 #EXTINF:-1 tvg-id="tnt" tvg-logo="https://iptvx.one/picons/tnt.png" group-title="Общее",ТНТ
 https://bl.rutube.ru/livestream/546602986e6a424d74d594876ddb3f04/index.m3u8?s=M9H6z-O74nqbdC30HqutIw&e=2070623480&scheme=https
-#EXTINF:-1 catchup="append" catchup-days="3" catchup-source="?offset=-${offset}&utcstart=${timestamp}" group-title="Общее" tvg-logo="https://karnei4.github.io/convert/logo-z/0b2ebb141ef278eae542b3bd4b698c6e.png" tvg-id="СТС (+4)",СТС
+#EXTINF:-1 catchup="append" catchup-days="3" catchup-source="?offset=-${offset}&utcstart=${timestamp}" group-title="Общее" tvg-logo="https://karnei4.github.io/convert/logo-z/aa0b5f6bf323de025b2e0f440ed7817b.png" tvg-id="СТС (+2)",СТС
 #EXTVLCOPT:http-user-agent=WINK/RT_(Android_TV/11)_WinkPlayer_AppleWebKit/537.36
-https://rt-sib-bul-htlive.cdn.ngenix.net/hls/CH_R02_OTT_SIB_BUL_STS/variant.m3u8
+https://rt-ural-chel-htlive.cdn.ngenix.net/hls/CH_R02_OTT_STS_URAL_CHEL/variant.m3u8
 #EXTINF:-1 tvg-id="RENTVInternational.ru@SD" tvg-logo="https://i.imgur.com/gBjk9oF.png" group-title="Общее",Рен ТВ
 http://178.134.1.158:8081/RENTV/index.m3u8
 #EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/НТВ.png" group-title="Общее",НТВ
@@ -45,7 +45,7 @@ http://185.57.68.33/40/index.m3u8
 #EXTINF:-1 tvg-logo="https://iptvx.one/picons/national-geographic.png" group-title="Познавательные",National Geographic
 https://stream8.cinerama.uz/1041/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Познавательные",Моя Планета
-http://188.113.190.15/219/tracks-v1a1/index.m3u8
+https://stream8.cinerama.uz/1247/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Познавательные",Дикая рыбалка
 http://188.113.190.15/69/tracks-v1a1/index.m3u8
 #EXTINF:-1 tvg-id="BRIDGEDeluxe.ru@HD" tvg-logo="https://i.imgur.com/EazL8w7.png" group-title="Музыка",Bridge TV
@@ -63,14 +63,14 @@ http://dancehits80.denvs.ru:8080/index.m3u8
 http://sdn-global-live-streaming-packager-cache.3qsdn.com/65183/65183_264_live.m3u8
 #EXTINF:-1 tvg-logo="http://1lot.tv/ch/8880.png" group-title="Музыка",Radio M2O
 https://streamcdnm5-4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/index.m3u8
-#EXTINF:-1 tvg-id="Kronehit.at@SD" tvg-logo="https://kuasark.com/files/stations-logos/kronehit.png" group-title="Музыка",kronehit
-https://bitcdn-kronehit.bitmovin.com/v2/hls/playlist.m3u8
+#EXTINF:-1 group-title="Музыка" tvg-logo="https://kuasark.com/files/stations-logos/kronehit.png",kronehit
+http://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b3128000.m3u8
 #EXTINF:-1 tvg-id="BarazaTVRelaxing.gr@SD" tvg-logo="https://i.imgur.com/TZ1unwF.png" group-title="Музыка",Baraza TV Relaxing
 https://rtmp.streams.ovh:1936/barazarelax/barazarelax/playlist.m3u8
 #EXTINF:-1 tvg-id="FONMusic.ru@SD" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка",ТНТ Music HD
 https://stream8.cinerama.uz/1272/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="shanson-tv" tvg-logo="https://iptvx.one/picons/shanson-tv.png" group-title="Музыка",Шансон ТВ
-https://uiptv.do.am/1ufc/602079679/playlist.m3u8
+#EXTINF:-1 tvg-id="ShansonTV.ru@SD" tvg-logo="https://i.imgur.com/Fk4sd8t.png" group-title="Музыка",Шансон ТВ
+http://catchup.videoline.ru/shanson/index.m3u8
 #EXTINF:-1 tvg-id="no_epg_music" tvg-logo="https://online-red.com/images/tv/one-hd.png" group-title="Музыка",Первый музыкальный BY
 http://rtmp.one.by:1200
 #EXTINF:-1 tvg-id="no_epg_music" tvg-logo="https://online-red.com/images/tv/one-hd.png" group-title="Музыка",Первый музыкальный BY HD
@@ -79,8 +79,8 @@ http://rtmp.one.by:1300
 https://stream8.cinerama.uz/1200/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru@HD" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка",1HD Music
 http://176.118.197.101/1HD/index.m3u8
-#EXTINF:-1 tvg-id="Now90s00s.uk@Poland" tvg-logo="https://images.pluto.tv/channels/660c209e19ca71000846cf38/colorLogoPNG.png" group-title="Музыка",Now 90
-https://amg01076-amg01076c19-rakuten-gb-8653.playouts.now.amagi.tv/playlist/amg01076-lightning-now90s00s-rakutengb/playlist.m3u8
+#EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/music2.png" group-title="Музыка",Now 90
+http://amg01076-amg01076c19-rakuten-gb-8653.playouts.now.amagi.tv/playlist/amg01076-lightning-now90s00s-rakutengb/playlist.m3u8
 #EXTINF:-1 tvg-id="Now80s.uk@SD" tvg-logo="https://i.imgur.com/YyPnMeB.png" group-title="Музыка",Now 80
 https://lightningnow80-samsungau.amagi.tv/playlist.m3u8
 #EXTINF:-1 tvg-id="7080TV.it@SD" tvg-logo="https://i.imgur.com/y4kNV3Q.png" group-title="Музыка",70-80 TV
@@ -161,8 +161,8 @@ http://stream.mcquack.net/73/index.m3u8
 http://185.57.68.33/110/mpegts
 #EXTINF:-1 tvg-logo="http://rafail1982.uz/logo/Матч! Футбол 2 HD.png" group-title="Спорт",Матч! Футбол 2
 http://141.95.55.143/CH3839/index.m3u8
-#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Спорт",viju+ Sport
-https://stream8.cinerama.uz/1229/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="vijuPlusSport.ru@SD" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт",viju+ Sport
+http://stream.mcquack.net/333/index.m3u8
 #EXTINF:-1 tvg-id="SetantaSports1.ru@HD" tvg-logo="https://i.imgur.com/8ANUZAu.png" group-title="Спорт",Setanta Sports
 https://fs.uplink.kz/setanta_sports_1_hd/mono.m3u8?token=onlinetv
 #EXTINF:-1 tvg-id="SetantaSports2Eurasia.ie@SD" tvg-logo="https://i.imgur.com/ouHunnK.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36" group-title="Спорт",Setanta Sports 2
