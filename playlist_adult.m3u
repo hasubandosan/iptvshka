@@ -1,32 +1,32 @@
-#EXTM3U url-tvg="https://iptvx.one/EPG"
-#EXTINF:-1 group-title="Adults",Adult IPTV Big Ass
+#EXTM3U url-tvg="https://iptvx.one/EPG,https://api.catcast.tv/api/timetable/epg.xml?channel_ids=40783"
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Big Ass
 http://cdn.adultiptv.net/bigass.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Big Tits
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Big Tits
 http://live.redtraffic.xyz/bigtits.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Big Dick
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Big Dick
 http://cdn.adultiptv.net/bigdick.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Blonde
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Blonde
 http://cdn.adultiptv.net/blonde.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Hardcore
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Hardcore
 http://live.redtraffic.xyz/hardcore.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Interracial
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Interracial
 http://cdn.adultiptv.net/interracial.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Milf
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Milf
 http://cdn.adultiptv.net/milf.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Pornstar
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Pornstar
 http://cdn.adultiptv.net/pornstar.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Rough
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Rough
 http://cdn.adultiptv.net/rough.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Russian
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Russian
 http://cdn.adultiptv.net/russian.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Teen
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Teen
 http://cdn.adultiptv.net/teen.m3u8
-#EXTINF:-1 group-title="Adults",Adult IPTV Threesome
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Adult IPTV Threesome
 http://cdn.adultiptv.net/threesome.m3u8
 #EXTINF:-1 group-title="Adults",Brazzers TV
 http://88.212.7.11/live/test_brazzers_hd_hevc/playlist.m3u8
-#EXTINF:-1 group-title="Adults",Dorcel HD Smakovka
-http://88.212.7.11/live/test_dorcel_hd_hevc/playlist.m3u8
+#EXTINF:-1 tvg-logo="data:image/svg+xml,<svg xmlns=" width="28" height="28" rx="3" fill="%232a3848" x="14" y="19" font-size="10" text-anchor="middle" font-family="monospace" group-title="Adults",Dorcel HD Smakovka
+http://77.46.130.252:99/dorcel
 #EXTINF:-1 group-title="Adults",Erox
 http://88.212.7.11/live/test_erox_hd_hevc/playlist.m3u8
 #EXTINF:-1 group-title="Adults",Eroxxx
